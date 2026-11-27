@@ -220,9 +220,6 @@
     }
 
     .section-header {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
       margin-bottom: 20px;
     }
 
@@ -495,12 +492,13 @@
     </div>
   </footer>
 
+  <!-- Okno rejestracji -->
   <div class="modal" id="registerModal" role="dialog" aria-modal="true"
-       aria-labelledby="modalTitle">
+       aria-labelledby="registerTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="modalTitle">Utwórz konto</h2>
-        <button class="close-button" id="closeModal" type="button"
+        <h2 id="registerTitle">Utwórz konto</h2>
+        <button class="close-button" id="closeRegisterModal" type="button"
                 aria-label="Zamknij">×</button>
       </div>
 
@@ -559,20 +557,101 @@
     </div>
   </div>
 
+  <!-- Okno logowania -->
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true"
+       aria-labelledby="loginTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="loginTitle">Zaloguj się</h2>
+        <button class="close-button" id="closeLoginModal" type="button"
+                aria-label="Zamknij">×</button>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">E-mail</label>
+          <input
+            id="loginEmail"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Hasło</label>
+          <input
+            id="loginPassword"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button class="submit-button" type="submit">Zaloguj</button>
+        <p class="message" id="loginMessage" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
   <script>
     const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById("loginModal");
     const registerButton = document.getElementById("registerButton");
     const loginButton = document.getElementById("loginButton");
-    const closeModal = document.getElementById("closeModal");
+    const closeRegisterModalButton =
+      document.getElementById("closeRegisterModal");
+    const closeLoginModalButton =
+      document.getElementById("closeLoginModal");
     const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
     const registerMessage = document.getElementById("registerMessage");
+    const loginMessage = document.getElementById("loginMessage");
     const accountActions = document.getElementById("accountActions");
     const searchForm = document.getElementById("searchForm");
+
+    function getAccounts() {
+      try {
+        const accounts = JSON.parse(
+          localStorage.getItem("craftModsAccounts") || "[]"
+        );
+
+        return Array.isArray(accounts) ? accounts : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function escapeHtml(value) {
+      const element = document.createElement("span");
+      element.textContent = String(value);
+      return element.innerHTML;
+    }
+
+    function showRegisterMessage(text, type) {
+      registerMessage.textContent = text;
+      registerMessage.className = `message ${type}`;
+    }
+
+    function showLoginMessage(text, type) {
+      loginMessage.textContent = text;
+      loginMessage.className = `message ${type}`;
+    }
 
     function openRegisterModal() {
       registerMessage.textContent = "";
       registerMessage.className = "message";
       registerModal.classList.add("open");
+      document.getElementById("nickname").focus();
+    }
+
+    function openLoginModal() {
+      loginMessage.textContent = "";
+      loginMessage.className = "message";
+      loginModal.classList.add("open");
+      document.getElementById("loginEmail").focus();
     }
 
     function closeRegisterModal() {
@@ -580,8 +659,15 @@
       registerForm.reset();
     }
 
+    function closeLoginModal() {
+      loginModal.classList.remove("open");
+      loginForm.reset();
+    }
+
     registerButton.addEventListener("click", openRegisterModal);
-    closeModal.addEventListener("click", closeRegisterModal);
+    loginButton.addEventListener("click", openLoginModal);
+    closeRegisterModalButton.addEventListener("click", closeRegisterModal);
+    closeLoginModalButton.addEventListener("click", closeLoginModal);
 
     registerModal.addEventListener("click", (event) => {
       if (event.target === registerModal) {
@@ -589,96 +675,127 @@
       }
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeRegisterModal();
+    loginModal.addEventListener("click", (event) => {
+      if (event.target === loginModal) {
+        closeLoginModal();
       }
     });
 
-    loginButton.addEventListener("click", () => {
-      alert("Logowanie wymaga podłączenia backendu i bazy danych.");
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeRegisterModal();
+        closeLoginModal();
+      }
     });
 
     registerForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
       const nickname = document.getElementById("nickname").value.trim();
-      // Poprawiona metoda: toLowerCase()
-      const email = document.getElementById("email").value.trim().toLowerCase();
+      const email =
+        document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value;
       const passwordConfirm =
         document.getElementById("passwordConfirm").value;
 
       if (nickname.length < 3) {
-        showMessage("Nick musi mieć co najmniej 3 znaki.", "error");
+        showRegisterMessage(
+          "Nick musi mieć co najmniej 3 znaki.",
+          "error"
+        );
         return;
       }
 
       if (password.length < 8) {
-        showMessage("Hasło musi mieć co najmniej 8 znaków.", "error");
+        showRegisterMessage(
+          "Hasło musi mieć co najmniej 8 znaków.",
+          "error"
+        );
         return;
       }
 
       if (password !== passwordConfirm) {
-        showMessage("Hasła nie są jednakowe.", "error");
+        showRegisterMessage("Hasła nie są jednakowe.", "error");
         return;
       }
 
-      let accounts;
-
-      try {
-        accounts = JSON.parse(
-          localStorage.getItem("craftModsAccounts") || "[]"
-        );
-      } catch {
-        accounts = [];
-      }
-
-      if (!Array.isArray(accounts)) {
-        accounts = [];
-      }
+      const accounts = getAccounts();
 
       if (accounts.some((account) => account.email === email)) {
-        showMessage("Konto z tym adresem e-mail już istnieje.", "error");
+        showRegisterMessage(
+          "Konto z tym adresem e-mail już istnieje.",
+          "error"
+        );
         return;
       }
 
-      // W wersji demonstracyjnej zapisujemy tylko nick i e-mail.
-      // Hasło nie jest przechowywane w przeglądarce.
-      accounts.push({ nickname, email });
+      accounts.push({
+        nickname,
+        email,
+        password
+      });
 
       try {
-        localStorage.setItem("craftModsAccounts", JSON.stringify(accounts));
         localStorage.setItem(
-          "craftModsCurrentUser",
-          JSON.stringify({ nickname, email })
+          "craftModsAccounts",
+          JSON.stringify(accounts)
         );
+
+        showRegisterMessage("Konto zostało utworzone!", "success");
+
+        setTimeout(() => {
+          closeRegisterModal();
+        }, 800);
       } catch {
-        showMessage("Nie udało się zapisać konta w tej przeglądarce.", "error");
+        showRegisterMessage(
+          "Nie udało się zapisać konta w tej przeglądarce.",
+          "error"
+        );
+      }
+    });
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const email =
+        document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password =
+        document.getElementById("loginPassword").value;
+
+      const accounts = getAccounts();
+      const account = accounts.find((item) => item.email === email);
+
+      if (!account) {
+        showLoginMessage(
+          "Nie znaleziono konta o takim adresie e-mail.",
+          "error"
+        );
         return;
       }
 
-      showMessage("Konto zostało utworzone!", "success");
+      if (account.password !== password) {
+        showLoginMessage("Nieprawidłowe hasło.", "error");
+        return;
+      }
+
+      localStorage.setItem(
+        "craftModsCurrentUser",
+        JSON.stringify({
+          nickname: account.nickname,
+          email: account.email
+        })
+      );
+
+      showLoginMessage("Zalogowano pomyślnie!", "success");
 
       setTimeout(() => {
-        closeRegisterModal();
+        closeLoginModal();
         updateAccountUI();
-      }, 900);
+      }, 600);
     });
 
-    function showMessage(text, type) {
-      registerMessage.textContent = text;
-      registerMessage.className = `message ${type}`;
-    }
-
-    function escapeHtml(value) {
-      const element = document.createElement("span");
-      element.textContent = value;
-      return element.innerHTML;
-    }
-
     function updateAccountUI() {
-      let currentUser;
+      let currentUser = null;
 
       try {
         currentUser = JSON.parse(
@@ -689,6 +806,20 @@
       }
 
       if (!currentUser) {
+        accountActions.innerHTML = `
+          <button class="button" type="button" id="loginButton">Zaloguj</button>
+          <button class="button button-primary" type="button"
+                  id="registerButton">Utwórz konto</button>
+        `;
+
+        document
+          .getElementById("loginButton")
+          .addEventListener("click", openLoginModal);
+
+        document
+          .getElementById("registerButton")
+          .addEventListener("click", openRegisterModal);
+
         return;
       }
 
@@ -697,16 +828,19 @@
         <button class="button" type="button" id="logoutButton">Wyloguj</button>
       `;
 
-      document.getElementById("logoutButton").addEventListener("click", () => {
-        localStorage.removeItem("craftModsCurrentUser");
-        location.reload();
-      });
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", () => {
+          localStorage.removeItem("craftModsCurrentUser");
+          updateAccountUI();
+        });
     }
 
     searchForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const query = document.getElementById("searchInput").value.trim();
+      const query =
+        document.getElementById("searchInput").value.trim();
 
       if (query) {
         alert(`Wyszukiwanie: ${query}\nNa razie nie ma dostępnych modów.`);
