@@ -8,7 +8,6 @@
 
   <style>
     :root {
-      --bg: #090d14;
       --surface: rgba(20, 27, 39, 0.96);
       --surface-light: #1c2534;
       --border: rgba(255, 255, 255, 0.08);
@@ -23,10 +22,14 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Inter, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       color: var(--text);
       background:
         linear-gradient(rgba(9, 13, 20, 0.94), rgba(9, 13, 20, 0.98)),
@@ -197,7 +200,12 @@
       color: var(--text);
     }
 
-    .search button {
+    .search input::placeholder {
+      color: #778397;
+    }
+
+    .search button,
+    .submit-button {
       border: 0;
       border-radius: 9px;
       padding: 12px 18px;
@@ -342,13 +350,7 @@
     .submit-button {
       width: 100%;
       margin-top: 6px;
-      border: 0;
-      border-radius: 9px;
       padding: 13px;
-      background: var(--green);
-      color: #091108;
-      cursor: pointer;
-      font-weight: 900;
     }
 
     .message {
@@ -382,10 +384,6 @@
 
     @media (max-width: 760px) {
       .nav-links {
-        display: none;
-      }
-
-      .account-actions .button:first-child {
         display: none;
       }
 
@@ -424,7 +422,7 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <a class="logo" href="#">
+      <a class="logo" href="#" aria-label="CraftMods — strona główna">
         <div class="logo-icon">🧱</div>
         <span>CraftMods</span>
       </a>
@@ -444,7 +442,7 @@
     </div>
   </nav>
 
-  <header class="hero">
+  <header class="hero" id="about">
     <div class="container hero-content">
       <div class="badge">
         <span class="badge-dot"></span>
@@ -497,11 +495,13 @@
     </div>
   </footer>
 
-  <div class="modal" id="registerModal" role="dialog" aria-modal="true">
+  <div class="modal" id="registerModal" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Utwórz konto</h2>
-        <button class="close-button" id="closeModal" type="button">×</button>
+        <h2 id="modalTitle">Utwórz konto</h2>
+        <button class="close-button" id="closeModal" type="button"
+                aria-label="Zamknij">×</button>
       </div>
 
       <form id="registerForm">
@@ -513,13 +513,20 @@
             type="text"
             minlength="3"
             maxlength="20"
+            autocomplete="username"
             required
           >
         </div>
 
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input id="email" name="email" type="email" required>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          >
         </div>
 
         <div class="form-group">
@@ -529,6 +536,7 @@
             name="password"
             type="password"
             minlength="8"
+            autocomplete="new-password"
             required
           >
         </div>
@@ -540,12 +548,13 @@
             name="passwordConfirm"
             type="password"
             minlength="8"
+            autocomplete="new-password"
             required
           >
         </div>
 
         <button class="submit-button" type="submit">Zarejestruj się</button>
-        <p class="message" id="registerMessage"></p>
+        <p class="message" id="registerMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
@@ -561,9 +570,9 @@
     const searchForm = document.getElementById("searchForm");
 
     function openRegisterModal() {
-      registerModal.classList.add("open");
       registerMessage.textContent = "";
       registerMessage.className = "message";
+      registerModal.classList.add("open");
     }
 
     function closeRegisterModal() {
@@ -573,10 +582,6 @@
 
     registerButton.addEventListener("click", openRegisterModal);
     closeModal.addEventListener("click", closeRegisterModal);
-
-    loginButton.addEventListener("click", () => {
-      alert("Logowanie zostanie dodane po podłączeniu bazy danych.");
-    });
 
     registerModal.addEventListener("click", (event) => {
       if (event.target === registerModal) {
@@ -590,55 +595,70 @@
       }
     });
 
+    loginButton.addEventListener("click", () => {
+      alert("Logowanie wymaga podłączenia backendu i bazy danych.");
+    });
+
     registerForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
       const nickname = document.getElementById("nickname").value.trim();
-      const email = document.getElementById("email").value.trim().toLowerName();
+      // Poprawiona metoda: toLowerCase()
+      const email = document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value;
       const passwordConfirm =
         document.getElementById("passwordConfirm").value;
 
       if (nickname.length < 3) {
-        registerMessage.textContent = "Nick musi mieć co najmniej 3 znaki.";
-        registerMessage.className = "message error";
+        showMessage("Nick musi mieć co najmniej 3 znaki.", "error");
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage("Hasło musi mieć co najmniej 8 znaków.", "error");
         return;
       }
 
       if (password !== passwordConfirm) {
-        registerMessage.textContent = "Hasła nie są jednakowe.";
-        registerMessage.className = "message error";
+        showMessage("Hasła nie są jednakowe.", "error");
         return;
       }
 
-      const accounts = JSON.parse(
-        localStorage.getItem("craftModsAccounts") || "[]"
-      );
+      let accounts;
+
+      try {
+        accounts = JSON.parse(
+          localStorage.getItem("craftModsAccounts") || "[]"
+        );
+      } catch {
+        accounts = [];
+      }
+
+      if (!Array.isArray(accounts)) {
+        accounts = [];
+      }
 
       if (accounts.some((account) => account.email === email)) {
-        registerMessage.textContent =
-          "Konto z tym adresem e-mail już istnieje.";
-        registerMessage.className = "message error";
+        showMessage("Konto z tym adresem e-mail już istnieje.", "error");
         return;
       }
 
-      accounts.push({
-        nickname,
-        email,
-        password
-      });
+      // W wersji demonstracyjnej zapisujemy tylko nick i e-mail.
+      // Hasło nie jest przechowywane w przeglądarce.
+      accounts.push({ nickname, email });
 
-      localStorage.setItem(
-        "craftModsAccounts",
-        JSON.stringify(accounts)
-      );
-      localStorage.setItem(
-        "craftModsCurrentUser",
-        JSON.stringify({ nickname, email })
-      );
+      try {
+        localStorage.setItem("craftModsAccounts", JSON.stringify(accounts));
+        localStorage.setItem(
+          "craftModsCurrentUser",
+          JSON.stringify({ nickname, email })
+        );
+      } catch {
+        showMessage("Nie udało się zapisać konta w tej przeglądarce.", "error");
+        return;
+      }
 
-      registerMessage.textContent = "Konto zostało utworzone!";
-      registerMessage.className = "message success";
+      showMessage("Konto zostało utworzone!", "success");
 
       setTimeout(() => {
         closeRegisterModal();
@@ -646,45 +666,47 @@
       }, 900);
     });
 
+    function showMessage(text, type) {
+      registerMessage.textContent = text;
+      registerMessage.className = `message ${type}`;
+    }
+
+    function escapeHtml(value) {
+      const element = document.createElement("span");
+      element.textContent = value;
+      return element.innerHTML;
+    }
+
     function updateAccountUI() {
-      const currentUser = JSON.parse(
-        localStorage.getItem("craftModsCurrentUser") || "null"
-      );
+      let currentUser;
+
+      try {
+        currentUser = JSON.parse(
+          localStorage.getItem("craftModsCurrentUser") || "null"
+        );
+      } catch {
+        currentUser = null;
+      }
 
       if (!currentUser) {
         return;
       }
 
       accountActions.innerHTML = `
-        <button class="button" type="button" id="profileButton">
-          ${escapeHtml(currentUser.nickname)}
-        </button>
-        <button class="button" type="button" id="logoutButton">
-          Wyloguj
-        </button>
+        <span class="button">${escapeHtml(currentUser.nickname)}</span>
+        <button class="button" type="button" id="logoutButton">Wyloguj</button>
       `;
 
-      document
-        .getElementById("logoutButton")
-        .addEventListener("click", logout);
-    }
-
-    function logout() {
-      localStorage.removeItem("craftModsCurrentUser");
-      location.reload();
-    }
-
-    function escapeHtml(value) {
-      const element = document.createElement("div");
-      element.textContent = value;
-      return element.innerHTML;
+      document.getElementById("logoutButton").addEventListener("click", () => {
+        localStorage.removeItem("craftModsCurrentUser");
+        location.reload();
+      });
     }
 
     searchForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      const query = document
-        .getElementById("searchInput")
-        .value.trim();
+
+      const query = document.getElementById("searchInput").value.trim();
 
       if (query) {
         alert(`Wyszukiwanie: ${query}\nNa razie nie ma dostępnych modów.`);
