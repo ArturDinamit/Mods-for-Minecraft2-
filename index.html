@@ -492,7 +492,6 @@
     </div>
   </footer>
 
-  <!-- Okno rejestracji -->
   <div class="modal" id="registerModal" role="dialog" aria-modal="true"
        aria-labelledby="registerTitle">
     <div class="modal-card">
@@ -505,50 +504,25 @@
       <form id="registerForm">
         <div class="form-group">
           <label for="nickname">Nick</label>
-          <input
-            id="nickname"
-            name="nickname"
-            type="text"
-            minlength="3"
-            maxlength="20"
-            autocomplete="username"
-            required
-          >
+          <input id="nickname" type="text" minlength="3" maxlength="20"
+                 autocomplete="username" required>
         </div>
 
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-          >
+          <input id="email" type="email" autocomplete="email" required>
         </div>
 
         <div class="form-group">
           <label for="password">Hasło</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
+          <input id="password" type="password" minlength="8"
+                 autocomplete="new-password" required>
         </div>
 
         <div class="form-group">
           <label for="passwordConfirm">Powtórz hasło</label>
-          <input
-            id="passwordConfirm"
-            name="passwordConfirm"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
+          <input id="passwordConfirm" type="password" minlength="8"
+                 autocomplete="new-password" required>
         </div>
 
         <button class="submit-button" type="submit">Zarejestruj się</button>
@@ -557,7 +531,6 @@
     </div>
   </div>
 
-  <!-- Okno logowania -->
   <div class="modal" id="loginModal" role="dialog" aria-modal="true"
        aria-labelledby="loginTitle">
     <div class="modal-card">
@@ -570,24 +543,13 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">E-mail</label>
-          <input
-            id="loginEmail"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-          >
+          <input id="loginEmail" type="email" autocomplete="email" required>
         </div>
 
         <div class="form-group">
           <label for="loginPassword">Hasło</label>
-          <input
-            id="loginPassword"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-          >
+          <input id="loginPassword" type="password"
+                 autocomplete="current-password" required>
         </div>
 
         <button class="submit-button" type="submit">Zaloguj</button>
@@ -601,24 +563,16 @@
     const loginModal = document.getElementById("loginModal");
     const registerButton = document.getElementById("registerButton");
     const loginButton = document.getElementById("loginButton");
-    const closeRegisterModalButton =
-      document.getElementById("closeRegisterModal");
-    const closeLoginModalButton =
-      document.getElementById("closeLoginModal");
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
-    const registerMessage = document.getElementById("registerMessage");
-    const loginMessage = document.getElementById("loginMessage");
     const accountActions = document.getElementById("accountActions");
-    const searchForm = document.getElementById("searchForm");
 
     function getAccounts() {
       try {
-        const accounts = JSON.parse(
+        const value = JSON.parse(
           localStorage.getItem("craftModsAccounts") || "[]"
         );
-
-        return Array.isArray(accounts) ? accounts : [];
+        return Array.isArray(value) ? value : [];
       } catch {
         return [];
       }
@@ -631,25 +585,25 @@
     }
 
     function showRegisterMessage(text, type) {
-      registerMessage.textContent = text;
-      registerMessage.className = `message ${type}`;
+      const message = document.getElementById("registerMessage");
+      message.textContent = text;
+      message.className = `message ${type}`;
     }
 
     function showLoginMessage(text, type) {
-      loginMessage.textContent = text;
-      loginMessage.className = `message ${type}`;
+      const message = document.getElementById("loginMessage");
+      message.textContent = text;
+      message.className = `message ${type}`;
     }
 
     function openRegisterModal() {
-      registerMessage.textContent = "";
-      registerMessage.className = "message";
+      showRegisterMessage("", "");
       registerModal.classList.add("open");
       document.getElementById("nickname").focus();
     }
 
     function openLoginModal() {
-      loginMessage.textContent = "";
-      loginMessage.className = "message";
+      showLoginMessage("", "");
       loginModal.classList.add("open");
       document.getElementById("loginEmail").focus();
     }
@@ -666,8 +620,14 @@
 
     registerButton.addEventListener("click", openRegisterModal);
     loginButton.addEventListener("click", openLoginModal);
-    closeRegisterModalButton.addEventListener("click", closeRegisterModal);
-    closeLoginModalButton.addEventListener("click", closeLoginModal);
+
+    document
+      .getElementById("closeRegisterModal")
+      .addEventListener("click", closeRegisterModal);
+
+    document
+      .getElementById("closeLoginModal")
+      .addEventListener("click", closeLoginModal);
 
     registerModal.addEventListener("click", (event) => {
       if (event.target === registerModal) {
@@ -691,26 +651,22 @@
     registerForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const nickname = document.getElementById("nickname").value.trim();
+      const nickname =
+        document.getElementById("nickname").value.trim();
       const email =
         document.getElementById("email").value.trim().toLowerCase();
-      const password = document.getElementById("password").value;
+      const password =
+        document.getElementById("password").value;
       const passwordConfirm =
         document.getElementById("passwordConfirm").value;
 
       if (nickname.length < 3) {
-        showRegisterMessage(
-          "Nick musi mieć co najmniej 3 znaki.",
-          "error"
-        );
+        showRegisterMessage("Nick musi mieć co najmniej 3 znaki.", "error");
         return;
       }
 
       if (password.length < 8) {
-        showRegisterMessage(
-          "Hasło musi mieć co najmniej 8 znaków.",
-          "error"
-        );
+        showRegisterMessage("Hasło musi mieć co najmniej 8 znaków.", "error");
         return;
       }
 
@@ -722,18 +678,11 @@
       const accounts = getAccounts();
 
       if (accounts.some((account) => account.email === email)) {
-        showRegisterMessage(
-          "Konto z tym adresem e-mail już istnieje.",
-          "error"
-        );
+        showRegisterMessage("Konto z takim e-mailem już istnieje.", "error");
         return;
       }
 
-      accounts.push({
-        nickname,
-        email,
-        password
-      });
+      accounts.push({ nickname, email, password });
 
       try {
         localStorage.setItem(
@@ -766,10 +715,7 @@
       const account = accounts.find((item) => item.email === email);
 
       if (!account) {
-        showLoginMessage(
-          "Nie znaleziono konta o takim adresie e-mail.",
-          "error"
-        );
+        showLoginMessage("Nie znaleziono konta o tym e-mailu.", "error");
         return;
       }
 
@@ -836,16 +782,18 @@
         });
     }
 
-    searchForm.addEventListener("submit", (event) => {
-      event.preventDefault();
+    document
+      .getElementById("searchForm")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
 
-      const query =
-        document.getElementById("searchInput").value.trim();
+        const query =
+          document.getElementById("searchInput").value.trim();
 
-      if (query) {
-        alert(`Wyszukiwanie: ${query}\nNa razie nie ma dostępnych modów.`);
-      }
-    });
+        if (query) {
+          alert(`Wyszukiwanie: ${query}\nNa razie nie ma dostępnych modów.`);
+        }
+      });
 
     updateAccountUI();
   </script>
