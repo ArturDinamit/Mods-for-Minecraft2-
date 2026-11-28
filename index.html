@@ -3,26 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090d14">
   <title>CraftMods — Minecraft Mods</title>
 
   <style>
     :root {
-      --surface: rgba(20, 27, 39, 0.96);
-      --surface-light: #1c2534;
-      --border: rgba(255, 255, 255, 0.08);
+      --green: #79c668;
       --text: #f4f7fb;
       --muted: #9ba7b7;
-      --green: #79c668;
+      --border: rgba(255,255,255,.09);
+      --surface: #141b27;
+      --surface2: #1c2534;
       --danger: #ff7b7b;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
 
     [hidden] { display: none !important; }
-
-    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -31,15 +27,18 @@
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        linear-gradient(rgba(9, 13, 20, 0.94), rgba(9, 13, 20, 0.98)),
+        linear-gradient(rgba(9,13,20,.94), rgba(9,13,20,.98)),
         linear-gradient(135deg, #17211b, #090d14);
     }
-
-    button, input { font: inherit; }
 
     a {
       color: inherit;
       text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
     }
 
     .container {
@@ -52,7 +51,7 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--border);
-      background: rgba(9, 13, 20, 0.88);
+      background: rgba(9,13,20,.92);
       backdrop-filter: blur(18px);
     }
 
@@ -80,64 +79,39 @@
     }
 
     .hero {
-      min-height: 400px;
+      min-height: 380px;
       display: grid;
       place-items: center;
       padding: 60px 0;
       text-align: center;
     }
 
-    .hero-content { max-width: 760px; }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      padding: 8px 12px;
-      border: 1px solid rgba(121, 198, 104, 0.25);
-      border-radius: 999px;
-      background: rgba(121, 198, 104, 0.09);
-      color: #addb9d;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    h1 {
+    .hero h1 {
       margin: 0;
       font-size: clamp(44px, 8vw, 74px);
       line-height: 1;
-      letter-spacing: -4px;
     }
 
-    h1 span { color: var(--green); }
+    .hero h1 span {
+      color: var(--green);
+    }
 
     .hero p {
-      max-width: 610px;
-      margin: 22px auto 30px;
+      max-width: 600px;
+      margin: 20px auto 30px;
       color: #b6c0ce;
-      font-size: 18px;
       line-height: 1.7;
     }
 
     .search {
       max-width: 590px;
-      margin: 0 auto;
+      margin: auto;
       display: flex;
       gap: 10px;
       padding: 8px;
       border: 1px solid var(--border);
       border-radius: 14px;
       background: var(--surface);
-      box-shadow: var(--shadow);
     }
 
     .search input {
@@ -150,10 +124,7 @@
       color: var(--text);
     }
 
-    .search input::placeholder { color: #778397; }
-
-    .search button,
-    .submit-button {
+    .search button {
       border: 0;
       border-radius: 9px;
       padding: 12px 18px;
@@ -163,9 +134,13 @@
       font-weight: 900;
     }
 
-    .section { padding: 32px 0 80px; }
+    .section {
+      padding: 32px 0 80px;
+    }
 
-    .section-header { margin-bottom: 20px; }
+    .section-header {
+      margin-bottom: 20px;
+    }
 
     .section-header h2 {
       margin: 0;
@@ -188,7 +163,7 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       background: var(--surface);
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
     }
 
     .mod-card img {
@@ -198,7 +173,9 @@
       object-fit: cover;
     }
 
-    .mod-info { padding: 20px; }
+    .mod-info {
+      padding: 20px;
+    }
 
     .mod-info h3 {
       margin: 0 0 8px;
@@ -211,30 +188,28 @@
       line-height: 1.6;
     }
 
-    .download-button,
-    .button {
+    .button,
+    .submit-button,
+    .download-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border: 1px solid var(--border);
       border-radius: 9px;
-      padding: 10px 14px;
+      padding: 12px 18px;
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      font-weight: 800;
+      font-weight: 900;
+      text-decoration: none;
     }
 
-    .download-button,
-    .button-primary {
+    .button-primary,
+    .submit-button,
+    .download-button {
       border: 0;
       background: var(--green);
       color: #091108;
-    }
-
-    .download-button {
-      padding: 12px 18px;
-      font-weight: 900;
     }
 
     .account-panel {
@@ -245,7 +220,7 @@
       padding: 28px;
       background: var(--surface);
       text-align: center;
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
     }
 
     .account-avatar {
@@ -255,7 +230,7 @@
       place-items: center;
       margin: 0 auto 16px;
       border-radius: 50%;
-      background: var(--surface-light);
+      background: var(--surface2);
       font-size: 38px;
     }
 
@@ -278,15 +253,15 @@
 
     .bottom-tabs {
       position: fixed;
+      left: 0;
       right: 0;
       bottom: 0;
-      left: 0;
       z-index: 150;
       height: 68px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       border-top: 1px solid var(--border);
-      background: rgba(9, 13, 20, 0.97);
+      background: rgba(9,13,20,.97);
       backdrop-filter: blur(18px);
     }
 
@@ -307,7 +282,7 @@
 
     .tab-button.active {
       color: var(--green);
-      background: rgba(121, 198, 104, 0.06);
+      background: rgba(121,198,104,.06);
     }
 
     .modal {
@@ -318,11 +293,13 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(3, 6, 10, 0.78);
+      background: rgba(3,6,10,.78);
       backdrop-filter: blur(10px);
     }
 
-    .modal.open { display: flex; }
+    .modal.open {
+      display: flex;
+    }
 
     .modal-card {
       width: min(430px, 100%);
@@ -330,7 +307,7 @@
       border-radius: 18px;
       padding: 28px;
       background: #141b27;
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
     }
 
     .modal-header {
@@ -356,12 +333,13 @@
       font-size: 18px;
     }
 
-    .form-group { margin-bottom: 14px; }
+    .form-group {
+      margin-bottom: 14px;
+    }
 
     .form-group label {
       display: block;
       margin-bottom: 7px;
-      color: #cbd3de;
       font-size: 14px;
       font-weight: 800;
     }
@@ -393,12 +371,12 @@
       font-size: 14px;
     }
 
-    .message.success { color: #9be68a; }
-    .message.error { color: var(--danger); }
+    .success { color: #9be68a; }
+    .error { color: var(--danger); }
 
     footer {
       border-top: 1px solid var(--border);
-      background: rgba(9, 13, 20, 0.75);
+      background: rgba(9,13,20,.75);
     }
 
     .footer-inner {
@@ -407,7 +385,6 @@
       align-items: center;
       justify-content: space-between;
       color: var(--muted);
-      font-size: 14px;
     }
 
     @media (max-width: 760px) {
@@ -420,7 +397,9 @@
     }
 
     @media (max-width: 480px) {
-      .container { width: calc(100% - 24px); }
+      .container {
+        width: calc(100% - 24px);
+      }
 
       .search,
       .account-buttons {
@@ -431,8 +410,6 @@
       .account-buttons .button {
         width: 100%;
       }
-
-      h1 { letter-spacing: -2px; }
     }
   </style>
 </head>
@@ -440,7 +417,7 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <a class="logo" href="#" id="homeLogo" aria-label="CraftMods — strona główna">
+      <a class="logo" href="#" id="homeLogo">
         <div class="logo-icon">🧱</div>
         <span>CraftMods</span>
       </a>
@@ -449,17 +426,12 @@
 
   <main id="modsPage" class="page">
     <header class="hero">
-      <div class="container hero-content">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          Minecraft Mods
-        </div>
-
+      <div class="container">
         <h1>Craft<span>Mods</span></h1>
 
         <p>
-          Proste miejsce do znalezienia najlepszych modów do Minecrafta.
-          Pobieraj dodatki i ulepszaj swoją rozgrywkę.
+          Najlepsze dodatki do Minecrafta.
+          Pobieraj mody i ulepszaj swoją rozgrywkę.
         </p>
 
         <form class="search" id="searchForm">
@@ -478,7 +450,7 @@
       <div class="container">
         <div class="section-header">
           <h2>Popularne mody</h2>
-          <p>Najbardziej interesujące dodatki</p>
+          <p>Najciekawsze dostępne dodatki</p>
         </div>
 
         <div class="mods-grid">
@@ -487,7 +459,9 @@
 
             <div class="mod-info">
               <h3>multiplayer with AI</h3>
-              <p>Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.</p>
+              <p>
+                Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
+              </p>
 
               <a
                 class="download-button"
@@ -505,7 +479,7 @@
     <footer>
       <div class="container footer-inner">
         <strong>CraftMods</strong>
-        <span>© 2026 CraftMods. Wszelkie prawa zastrzeżone.</span>
+        <span>© 2026 CraftMods</span>
       </div>
     </footer>
   </main>
@@ -540,22 +514,18 @@
     </button>
   </nav>
 
-  <div
-    class="modal"
-    id="registerModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="registerTitle"
-  >
+  <div class="modal" id="registerModal" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="registerTitle">Utwórz konto</h2>
+        <h2>Utwórz konto</h2>
         <button
           class="close-button"
           id="closeRegisterModal"
           type="button"
           aria-label="Zamknij"
-        >×</button>
+        >
+          ×
+        </button>
       </div>
 
       <form id="registerForm">
@@ -603,28 +573,27 @@
           >
         </div>
 
-        <button class="submit-button" type="submit">Zarejestruj się</button>
-        <p class="message" id="registerMessage" aria-live="polite"></p>
+        <button class="submit-button" type="submit">
+          Zarejestruj się
+        </button>
+
+        <p class="message" id="registerMessage"></p>
       </form>
     </div>
   </div>
 
-  <div
-    class="modal"
-    id="loginModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="loginTitle"
-  >
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="loginTitle">Zaloguj się</h2>
+        <h2>Zaloguj się</h2>
         <button
           class="close-button"
           id="closeLoginModal"
           type="button"
           aria-label="Zamknij"
-        >×</button>
+        >
+          ×
+        </button>
       </div>
 
       <form id="loginForm">
@@ -648,8 +617,11 @@
           >
         </div>
 
-        <button class="submit-button" type="submit">Zaloguj</button>
-        <p class="message" id="loginMessage" aria-live="polite"></p>
+        <button class="submit-button" type="submit">
+          Zaloguj
+        </button>
+
+        <p class="message" id="loginMessage"></p>
       </form>
     </div>
   </div>
@@ -658,8 +630,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       const modsPage = document.getElementById("modsPage");
       const accountPage = document.getElementById("accountPage");
-      const tabButtons = document.querySelectorAll(".tab-button");
       const accountPanel = document.getElementById("accountPanel");
+      const tabButtons = document.querySelectorAll(".tab-button");
+
       const registerModal = document.getElementById("registerModal");
       const loginModal = document.getElementById("loginModal");
       const registerForm = document.getElementById("registerForm");
@@ -675,7 +648,7 @@
           button.setAttribute("aria-selected", String(active));
         });
 
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo(0, 0);
       }
 
       tabButtons.forEach((button) => {
@@ -684,27 +657,28 @@
         });
       });
 
-      document.getElementById("homeLogo").addEventListener("click", (event) => {
-        event.preventDefault();
-        showPage("modsPage");
-      });
+      document
+        .getElementById("homeLogo")
+        .addEventListener("click", (event) => {
+          event.preventDefault();
+          showPage("modsPage");
+        });
 
       function openModal(modal) {
         modal.classList.add("open");
-        document.body.style.overflow = "hidden";
       }
 
       function closeModal(modal) {
         modal.classList.remove("open");
-        document.body.style.overflow = "";
       }
 
       function getAccounts() {
         try {
-          const value = JSON.parse(
+          const accounts = JSON.parse(
             localStorage.getItem("craftModsAccounts") || "[]"
           );
-          return Array.isArray(value) ? value : [];
+
+          return Array.isArray(accounts) ? accounts : [];
         } catch {
           return [];
         }
@@ -724,15 +698,21 @@
 
       document
         .getElementById("closeRegisterModal")
-        .addEventListener("click", () => closeModal(registerModal));
+        .addEventListener("click", () => {
+          closeModal(registerModal);
+        });
 
       document
         .getElementById("closeLoginModal")
-        .addEventListener("click", () => closeModal(loginModal));
+        .addEventListener("click", () => {
+          closeModal(loginModal);
+        });
 
       [registerModal, loginModal].forEach((modal) => {
         modal.addEventListener("click", (event) => {
-          if (event.target === modal) closeModal(modal);
+          if (event.target === modal) {
+            closeModal(modal);
+          }
         });
       });
 
@@ -763,24 +743,40 @@
           document.getElementById("passwordConfirm").value;
 
         if (nickname.length < 3) {
-          setMessage("registerMessage", "Nick musi mieć co najmniej 3 znaki.", "error");
+          setMessage(
+            "registerMessage",
+            "Nick musi mieć co najmniej 3 znaki.",
+            "error"
+          );
           return;
         }
 
         if (password.length < 8) {
-          setMessage("registerMessage", "Hasło musi mieć co najmniej 8 znaków.", "error");
+          setMessage(
+            "registerMessage",
+            "Hasło musi mieć co najmniej 8 znaków.",
+            "error"
+          );
           return;
         }
 
         if (password !== passwordConfirm) {
-          setMessage("registerMessage", "Hasła nie są jednakowe.", "error");
+          setMessage(
+            "registerMessage",
+            "Hasła nie są jednakowe.",
+            "error"
+          );
           return;
         }
 
         const accounts = getAccounts();
 
         if (accounts.some((account) => account.email === email)) {
-          setMessage("registerMessage", "Konto z tym e-mailem już istnieje.", "error");
+          setMessage(
+            "registerMessage",
+            "Konto z tym e-mailem już istnieje.",
+            "error"
+          );
           return;
         }
 
@@ -792,7 +788,11 @@
             JSON.stringify(accounts)
           );
 
-          setMessage("registerMessage", "Konto zostało utworzone!", "success");
+          setMessage(
+            "registerMessage",
+            "Konto zostało utworzone!",
+            "success"
+          );
 
           setTimeout(() => {
             closeModal(registerModal);
@@ -800,12 +800,16 @@
             updateAccountPanel();
           }, 700);
         } catch {
-          setMessage("registerMessage", "Nie udało się zapisać konta.", "error");
+          setMessage(
+            "registerMessage",
+            "Nie udało się zapisać konta.",
+            "error"
+          );
         }
       });
 
       loginForm.addEventListener("submit", (event) => {
-        event.preventDefault();
+        event.preventEvent();
 
         const email =
           document
@@ -817,16 +821,25 @@
         const password =
           document.getElementById("loginPassword").value;
 
-        const account =
-          getAccounts().find((item) => item.email === email);
+        const account = getAccounts().find(
+          (item) => item.email === email
+        );
 
         if (!account) {
-          setMessage("loginMessage", "Nie znaleziono konta o tym e-mailu.", "error");
+          setMessage(
+            "loginMessage",
+            "Nie znaleziono konta o tym e-mailu.",
+            "error"
+          );
           return;
         }
 
         if (account.password !== password) {
-          setMessage("loginMessage", "Nieprawidłowe hasło.", "error");
+          setMessage(
+            "loginMessage",
+            "Nieprawidłowe hasło.",
+            "error"
+          );
           return;
         }
 
@@ -838,7 +851,11 @@
           })
         );
 
-        setMessage("loginMessage", "Zalogowano pomyślnie!", "success");
+        setMessage(
+          "loginMessage",
+          "Zalogowano pomyślnie!",
+          "success"
+        );
 
         setTimeout(() => {
           closeModal(loginModal);
@@ -852,4 +869,32 @@
 
         try {
           currentUser = JSON.parse(
-            localStorage.getItem("craftModsCurrentUser") || "n
+            localStorage.getItem("craftModsCurrentUser") || "null"
+          );
+        } catch {
+          currentUser = null;
+        }
+
+        if (!currentUser) {
+          accountPanel.innerHTML = `
+            <div class="account-avatar">👤</div>
+            <h2 class="account-name">Account</h2>
+            <p class="account-email">
+              Zaloguj się lub utwórz konto
+            </p>
+
+            <div class="account-buttons">
+              <button
+                class="button"
+                type="button"
+                id="panelLoginButton"
+              >
+                Zaloguj
+              </button>
+
+              <button
+                class="button button-primary"
+                type="button"
+                id="panelRegisterButton"
+              >
+  
