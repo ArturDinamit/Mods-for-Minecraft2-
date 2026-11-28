@@ -16,7 +16,9 @@
       --danger: #ff7b7b;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     [hidden] {
       display: none !important;
@@ -41,6 +43,10 @@
     button,
     input {
       font: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
     .container {
@@ -132,7 +138,6 @@
       padding: 12px 18px;
       background: var(--green);
       color: #091108;
-      cursor: pointer;
       font-weight: 900;
     }
 
@@ -201,7 +206,6 @@
       padding: 12px 18px;
       background: var(--surface);
       color: var(--text);
-      cursor: pointer;
       font-weight: 900;
       text-decoration: none;
     }
@@ -255,9 +259,9 @@
 
     .bottom-tabs {
       position: fixed;
-      left: 0;
       right: 0;
       bottom: 0;
+      left: 0;
       z-index: 150;
       height: 68px;
       display: grid;
@@ -271,7 +275,6 @@
       border: 0;
       background: transparent;
       color: var(--muted);
-      cursor: pointer;
       font-weight: 900;
       touch-action: manipulation;
     }
@@ -331,7 +334,6 @@
       border-radius: 8px;
       background: transparent;
       color: var(--text);
-      cursor: pointer;
       font-size: 18px;
     }
 
@@ -373,8 +375,13 @@
       font-size: 14px;
     }
 
-    .success { color: #9be68a; }
-    .error { color: var(--danger); }
+    .success {
+      color: #9be68a;
+    }
+
+    .error {
+      color: var(--danger);
+    }
 
     footer {
       border-top: 1px solid var(--border);
@@ -426,7 +433,7 @@
     </div>
   </nav>
 
-  <main id="modsPage" class="page">
+  <main id="modsPage">
     <header class="hero">
       <div class="container">
         <h1>Craft<span>Mods</span></h1>
@@ -456,7 +463,7 @@
         </div>
 
         <div class="mods-grid">
-          <article class="mod-card">
+          <article class="mod-card" data-mod-name="multiplayer with AI">
             <img src="./mod1.jpg" alt="multiplayer with AI">
 
             <div class="mod-info">
@@ -475,6 +482,8 @@
             </div>
           </article>
         </div>
+
+        <p class="message" id="searchMessage" aria-live="polite"></p>
       </div>
     </section>
 
@@ -486,7 +495,7 @@
     </footer>
   </main>
 
-  <main id="accountPage" class="page" hidden>
+  <main id="accountPage" hidden>
     <section class="section">
       <div class="container">
         <div class="account-panel" id="accountPanel"></div>
@@ -522,12 +531,10 @@
         <h2>Utwórz konto</h2>
         <button
           class="close-button"
-          id="closeRegisterModal"
           type="button"
+          data-close-modal="registerModal"
           aria-label="Zamknij"
-        >
-          ×
-        </button>
+        >×</button>
       </div>
 
       <form id="registerForm">
@@ -579,7 +586,7 @@
           Zarejestruj się
         </button>
 
-        <p class="message" id="registerMessage"></p>
+        <p class="message" id="registerMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
@@ -590,12 +597,10 @@
         <h2>Zaloguj się</h2>
         <button
           class="close-button"
-          id="closeLoginModal"
           type="button"
+          data-close-modal="loginModal"
           aria-label="Zamknij"
-        >
-          ×
-        </button>
+        >×</button>
       </div>
 
       <form id="loginForm">
@@ -619,241 +624,239 @@
           >
         </div>
 
-        <button class="submit-button" type="submit">
-          Zaloguj
-        </button>
+        <button class="submit-button" type="submit">Zaloguj</button>
 
-        <p class="message" id="loginMessage"></p>
+        <p class="message" id="loginMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const modsPage = document.getElementById("modsPage");
-      const accountPage = document.getElementById("accountPage");
-      const accountPanel = document.getElementById("accountPanel");
+    const modsPage = document.getElementById("modsPage");
+    const accountPage = document.getElementById("accountPage");
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const accountPanel = document.getElementById("accountPanel");
 
-      const tabButtons = document.querySelectorAll(".tab-button");
+    const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById("loginModal");
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
 
-      const registerModal = document.getElementById("registerModal");
-      const loginModal = document.getElementById("loginModal");
-      const registerForm = document.getElementById("registerForm");
-      const loginForm = document.getElementById("loginForm");
-
-      function showPage(pageId) {
-        const showMods = pageId === "modsPage";
-
-        modsPage.hidden = !showMods;
-        accountPage.hidden = showMods;
-
-        tabButtons.forEach((button) => {
-          const active = button.dataset.page === pageId;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-selected", String(active));
-        });
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
+    function showPage(pageId) {
+      if (pageId !== "modsPage" && pageId !== "accountPage") {
+        return;
       }
+
+      modsPage.hidden = pageId !== "modsPage";
+      accountPage.hidden = pageId !== "accountPage";
 
       tabButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          showPage(button.dataset.page);
-        });
+        const isActive = button.dataset.page === pageId;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-selected", String(isActive));
       });
 
-      document
-        .getElementById("homeLogo")
-        .addEventListener("click", (event) => {
-          event.preventDefault();
-          showPage("modsPage");
-        });
+      window.scrollTo(0, 0);
+    }
 
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        showPage(button.dataset.page);
+      });
+    });
+
+    document.getElementById("homeLogo").addEventListener("click", (event) => {
+      event.preventDefault();
       showPage("modsPage");
+    });
 
-      function openModal(modal) {
-        modal.classList.add("open");
-      }
+    function openModal(modal) {
+      modal.classList.add("open");
+    }
 
-      function closeModal(modal) {
-        modal.classList.remove("open");
-      }
+    function closeModal(modal) {
+      modal.classList.remove("open");
+    }
 
-      function getAccounts() {
-        try {
-          const accounts = JSON.parse(
-            localStorage.getItem("craftModsAccounts") || "[]"
-          );
-
-          return Array.isArray(accounts) ? accounts : [];
-        } catch {
-          return [];
-        }
-      }
-
-      function setMessage(id, text, type) {
-        const message = document.getElementById(id);
-
-        message.textContent = text;
-        message.className = `message ${type || ""}`;
-      }
-
-      function escapeHtml(value) {
-        const element = document.createElement("span");
-        element.textContent = String(value);
-        return element.innerHTML;
-      }
-
-      document
-        .getElementById("closeRegisterModal")
-        .addEventListener("click", () => {
-          closeModal(registerModal);
-        });
-
-      document
-        .getElementById("closeLoginModal")
-        .addEventListener("click", () => {
-          closeModal(loginModal);
-        });
-
-      [registerModal, loginModal].forEach((modal) => {
-        modal.addEventListener("click", (event) => {
-          if (event.target === modal) {
-            closeModal(modal);
-          }
-        });
+    document.querySelectorAll("[data-close-modal]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const modal = document.getElementById(button.dataset.closeModal);
+        if (modal) closeModal(modal);
       });
+    });
 
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeModal(registerModal);
-          closeModal(loginModal);
+    [registerModal, loginModal].forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeModal(modal);
         }
       });
+    });
 
-      registerForm.addEventListener("submit", (event) => {
-        event.preventDefault();
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeModal(registerModal);
+        closeModal(loginModal);
+      }
+    });
 
-        const nickname =
-          document.getElementById("nickname").value.trim();
-
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document.getElementById("password").value;
-
-        const passwordConfirm =
-          document.getElementById("passwordConfirm").value;
-
-        if (nickname.length < 3) {
-          setMessage(
-            "registerMessage",
-            "Nick musi mieć co najmniej 3 znaki.",
-            "error"
-          );
-          return;
-        }
-
-        if (password.length < 8) {
-          setMessage(
-            "registerMessage",
-            "Hasło musi mieć co najmniej 8 znaków.",
-            "error"
-          );
-          return;
-        }
-
-        if (password !== passwordConfirm) {
-          setMessage(
-            "registerMessage",
-            "Hasła nie są jednakowe.",
-            "error"
-          );
-          return;
-        }
-
-        const accounts = getAccounts();
-
-        if (accounts.some((account) => account.email === email)) {
-          setMessage(
-            "registerMessage",
-            "Konto z tym e-mailem już istnieje.",
-            "error"
-          );
-          return;
-        }
-
-        accounts.push({ nickname, email, password });
-
-        try {
-          localStorage.setItem(
-            "craftModsAccounts",
-            JSON.stringify(accounts)
-          );
-
-          setMessage(
-            "registerMessage",
-            "Konto zostało utworzone!",
-            "success"
-          );
-
-          setTimeout(() => {
-            closeModal(registerModal);
-            registerForm.reset();
-            updateAccountPanel();
-          }, 700);
-        } catch {
-          setMessage(
-            "registerMessage",
-            "Nie udało się zapisać konta.",
-            "error"
-          );
-        }
-      });
-
-      loginForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const email =
-          document
-            .getElementById("loginEmail")
-            .value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document.getElementById("loginPassword").value;
-
-        const account = getAccounts().find(
-          (item) => item.email === email
+    function getAccounts() {
+      try {
+        const accounts = JSON.parse(
+          localStorage.getItem("craftModsAccounts") || "[]"
         );
 
-        if (!account) {
-          setMessage(
-            "loginMessage",
-            "Nie znaleziono konta o tym e-mailu.",
-            "error"
-          );
-          return;
-        }
+        return Array.isArray(accounts) ? accounts : [];
+      } catch {
+        return [];
+      }
+    }
 
-        if (account.password !== password) {
-          setMessage(
-            "loginMessage",
-            "Nieprawidłowe hasło.",
-            "error"
-          );
-          return;
-        }
+    function setMessage(id, text, type = "") {
+      const message = document.getElementById(id);
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
 
+    function updateAccountPanel() {
+      let currentUser = null;
+
+      try {
+        currentUser = JSON.parse(
+          localStorage.getItem("craftModsCurrentUser") || "null"
+        );
+      } catch {
+        currentUser = null;
+      }
+
+      if (!currentUser) {
+        accountPanel.innerHTML = `
+          <div class="account-avatar">👤</div>
+          <h2 class="account-name">Account</h2>
+          <p class="account-email">Zaloguj się lub utwórz konto</p>
+
+          <div class="account-buttons">
+            <button class="button" type="button" id="panelLoginButton">
+              Zaloguj
+            </button>
+            <button class="button button-primary" type="button" id="panelRegisterButton">
+              Utwórz konto
+            </button>
+          </div>
+        `;
+
+        document
+          .getElementById("panelLoginButton")
+          .addEventListener("click", () => {
+            setMessage("loginMessage", "");
+            openModal(loginModal);
+          });
+
+        document
+          .getElementById("panelRegisterButton")
+          .addEventListener("click", () => {
+            setMessage("registerMessage", "");
+            openModal(registerModal);
+          });
+
+        return;
+      }
+
+      const safeNickname = escapeHtml(currentUser.nickname || "Account");
+      const safeEmail = escapeHtml(currentUser.email || "");
+
+      accountPanel.innerHTML = `
+        <div class="account-avatar">👤</div>
+        <h2 class="account-name">${safeNickname}</h2>
+        <p class="account-email">${safeEmail}</p>
+        <div class="account-buttons">
+          <button class="button" type="button" id="logoutButton">
+            Wyloguj
+          </button>
+        </div>
+      `;
+
+      document.getElementById("logoutButton").addEventListener("click", () => {
+        localStorage.removeItem("craftModsCurrentUser");
+        updateAccountPanel();
+      });
+    }
+
+    function escapeHtml(value) {
+      const element = document.createElement("span");
+      element.textContent = String(value);
+      return element.innerHTML;
+    }
+
+    registerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const nickname = document.getElementById("nickname").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("passwordConfirm").value;
+
+      if (nickname.length < 3) {
+        setMessage("registerMessage", "Nick musi mieć co najmniej 3 znaki.", "error");
+        return;
+      }
+
+      if (password.length < 8) {
+        setMessage("registerMessage", "Hasło musi mieć co najmniej 8 znaków.", "error");
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        setMessage("registerMessage", "Hasła nie są jednakowe.", "error");
+        return;
+      }
+
+      const accounts = getAccounts();
+
+      if (accounts.some((account) => account.email === email)) {
+        setMessage("registerMessage", "Konto z tym e-mailem już istnieje.", "error");
+        return;
+      }
+
+      accounts.push({ nickname, email, password });
+
+      try {
+        localStorage.setItem("craftModsAccounts", JSON.stringify(accounts));
+        setMessage("registerMessage", "Konto zostało utworzone!", "success");
+
+        setTimeout(() => {
+          closeModal(registerModal);
+          registerForm.reset();
+          updateAccountPanel();
+        }, 700);
+      } catch {
+        setMessage("registerMessage", "Nie udało się zapisać konta.", "error");
+      }
+    });
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const email = document
+        .getElementById("loginEmail")
+        .value
+        .trim()
+        .toLowerCase();
+
+      const password = document.getElementById("loginPassword").value;
+      const account = getAccounts().find((item) => item.email === email);
+
+      if (!account) {
+        setMessage("loginMessage", "Nie znaleziono konta o tym e-mailu.", "error");
+        return;
+      }
+
+      if (account.password !== password) {
+        setMessage("loginMessage", "Nieprawidłowe hasło.", "error");
+        return;
+      }
+
+      try {
         localStorage.setItem(
           "craftModsCurrentUser",
           JSON.stringify({
@@ -861,47 +864,5 @@
             email: account.email
           })
         );
-
-        setMessage(
-          "loginMessage",
-          "Zalogowano pomyślnie!",
-          "success"
-        );
-
-        setTimeout(() => {
-          closeModal(loginModal);
-          loginForm.reset();
-          updateAccountPanel();
-        }, 600);
-      });
-
-      function updateAccountPanel() {
-        let currentUser = null;
-
-        try {
-          currentUser = JSON.parse(
-            localStorage.getItem("craftModsCurrentUser") || "null"
-          );
-        } catch {
-          currentUser = null;
-        }
-
-        if (!currentUser) {
-          accountPanel.innerHTML = `
-            <div class="account-avatar">👤</div>
-            <h2 class="account-name">Account</h2>
-            <p class="account-email">
-              Zaloguj się lub utwórz konto
-            </p>
-
-            <div class="account-buttons">
-              <button
-                class="button"
-                type="button"
-                id="panelLoginButton"
-              >
-                Zaloguj
-              </button>
-
-              <button
-                c
+      } catch {
+        setMess
