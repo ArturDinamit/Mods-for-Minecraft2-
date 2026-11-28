@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090d14">
   <title>CraftMods — Minecraft Mods</title>
 
   <style>
@@ -22,12 +21,12 @@
     body {
       margin: 0;
       min-height: 100vh;
+      padding-bottom: 76px;
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
         linear-gradient(rgba(9,13,20,.94), rgba(9,13,20,.98)),
         linear-gradient(135deg, #17211b, #090d14);
-      padding-bottom: 76px;
     }
 
     a {
@@ -75,6 +74,14 @@
       place-items: center;
       border-radius: 10px;
       background: linear-gradient(135deg, #99d77d, #4d8d43);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
     }
 
     .hero {
@@ -133,14 +140,6 @@
       font-weight: 900;
     }
 
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
     .section {
       padding: 32px 0 80px;
     }
@@ -195,9 +194,9 @@
       line-height: 1.6;
     }
 
-    .download-button,
     .button,
-    .submit-button {
+    .submit-button,
+    .download-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -208,11 +207,12 @@
       color: var(--text);
       cursor: pointer;
       font-weight: 900;
+      text-decoration: none;
     }
 
-    .download-button,
     .button-primary,
-    .submit-button {
+    .submit-button,
+    .download-button {
       border: 0;
       background: var(--green);
       color: #091108;
@@ -343,13 +343,8 @@
       font-size: 14px;
     }
 
-    .success {
-      color: #9be68a;
-    }
-
-    .error {
-      color: var(--danger);
-    }
+    .success { color: #9be68a; }
+    .error { color: var(--danger); }
 
     .bottom-tabs {
       position: fixed;
@@ -375,8 +370,8 @@
 
     .tab-button span {
       display: block;
-      font-size: 20px;
       margin-bottom: 3px;
+      font-size: 20px;
     }
 
     .tab-button.active {
@@ -413,16 +408,13 @@
         flex-direction: column;
       }
 
-      .search button {
+      .search button,
+      .account-buttons .button {
         width: 100%;
       }
 
       .account-buttons {
         flex-direction: column;
-      }
-
-      .account-buttons .button {
-        width: 100%;
       }
     }
   </style>
@@ -431,7 +423,7 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <a class="logo" href="#">
+      <a class="logo" href="#" onclick="showPage('modsPage'); return false;">
         <div class="logo-icon">🧱</div>
         <span>CraftMods</span>
       </a>
@@ -439,7 +431,7 @@
   </nav>
 
   <main id="modsPage" class="page active">
-    <header class="hero" id="about">
+    <header class="hero">
       <div class="container">
         <h1>Craft<span>Mods</span></h1>
 
@@ -506,13 +498,21 @@
     </section>
   </main>
 
-  <nav class="bottom-tabs">
-    <button class="tab-button active" type="button" data-page="modsPage">
+  <nav class="bottom-tabs" aria-label="Nawigacja">
+    <button
+      class="tab-button active"
+      type="button"
+      data-page="modsPage"
+    >
       <span>🧱</span>
       Mods
     </button>
 
-    <button class="tab-button" type="button" data-page="accountPage">
+    <button
+      class="tab-button"
+      type="button"
+      data-page="accountPage"
+    >
       <span>👤</span>
       Account
     </button>
@@ -675,6 +675,49 @@
       modal.classList.remove("open");
     }
 
+    function showPage(pageId) {
+      document
+        .querySelectorAll(".page")
+        .forEach((page) => {
+          page.classList.remove("active");
+        });
+
+      document
+        .querySelectorAll(".tab-button")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
+
+      const page =
+        document.getElementById(pageId);
+
+      if (page) {
+        page.classList.add("active");
+      }
+
+      const tab =
+        document.querySelector(
+          `[data-page="${pageId}"]`
+        );
+
+      if (tab) {
+        tab.classList.add("active");
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    document
+      .querySelectorAll(".tab-button")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          showPage(button.dataset.page);
+        });
+      });
+
     document
       .getElementById("closeRegisterModal")
       .addEventListener("click", () => {
@@ -736,7 +779,6 @@
         message.className = "message error";
         message.textContent =
           "Nick musi mieć co najmniej 3 znaki.";
-
         return;
       }
 
@@ -744,7 +786,6 @@
         message.className = "message error";
         message.textContent =
           "Hasło musi mieć co najmniej 8 znaków.";
-
         return;
       }
 
@@ -752,7 +793,6 @@
         message.className = "message error";
         message.textContent =
           "Hasła nie są jednakowe.";
-
         return;
       }
 
@@ -766,7 +806,6 @@
         message.className = "message error";
         message.textContent =
           "Konto z tym e-mailem już istnieje.";
-
         return;
       }
 
@@ -825,7 +864,6 @@
         message.className = "message error";
         message.textContent =
           "Nie znaleziono konta o takim e-mailu.";
-
         return;
       }
 
@@ -833,7 +871,6 @@
         message.className = "message error";
         message.textContent =
           "Nieprawidłowe hasło.";
-
         return;
       }
 
@@ -851,6 +888,7 @@
 
       setTimeout(() => {
         closeModal(loginModal);
+        loginForm.reset();
         updateAccountPanel();
       }, 600);
     });
@@ -909,44 +947,4 @@
           ${escapeHtml(currentUser.nickname)}
         </h2>
 
-        <p class="account-email">
-          ${escapeHtml(currentUser.email)}
-        </p>
-
-        <div class="account-buttons">
-          <button class="button" id="logoutButton" type="button">
-            Wyloguj
-          </button>
-        </div>
-      `;
-
-      document
-        .getElementById("logoutButton")
-        .addEventListener("click", () => {
-          localStorage.removeItem(
-            "craftModsCurrentUser"
-          );
-
-          updateAccountPanel();
-        });
-    }
-
-    const tabButtons =
-      document.querySelectorAll(".tab-button");
-
-    const pages =
-      document.querySelectorAll(".page");
-
-    tabButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        tabButtons.forEach((item) => {
-          item.classList.remove("active");
-        });
-
-        pages.forEach((page) => {
-          page.classList.remove("active");
-        });
-
-        button.classList.add("active");
-
-  
+     
