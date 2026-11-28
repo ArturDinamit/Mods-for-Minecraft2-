@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CraftMods — Multiplayer with AI</title>
+  <meta name="theme-color" content="#090d14">
+  <title>CraftMods — Minecraft Mods</title>
 
   <style>
     :root {
@@ -26,6 +27,7 @@
       background:
         linear-gradient(rgba(9,13,20,.94), rgba(9,13,20,.98)),
         linear-gradient(135deg, #17211b, #090d14);
+      padding-bottom: 76px;
     }
 
     a {
@@ -56,8 +58,6 @@
       min-height: 72px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
     }
 
     .logo {
@@ -75,47 +75,6 @@
       place-items: center;
       border-radius: 10px;
       background: linear-gradient(135deg, #99d77d, #4d8d43);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 8px;
-    }
-
-    .nav-links a {
-      padding: 10px 14px;
-      border-radius: 9px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      background: var(--surface2);
-    }
-
-    .account-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .button,
-    .submit-button {
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 10px 14px;
-      background: var(--surface);
-      color: var(--text);
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .button-primary,
-    .submit-button {
-      border: 0;
-      background: var(--green);
-      color: #091108;
     }
 
     .hero {
@@ -174,6 +133,14 @@
       font-weight: 900;
     }
 
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
     .section {
       padding: 32px 0 80px;
     }
@@ -228,19 +195,72 @@
       line-height: 1.6;
     }
 
-    .download-button {
+    .download-button,
+    .button,
+    .submit-button {
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
       border-radius: 9px;
       padding: 12px 18px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .download-button,
+    .button-primary,
+    .submit-button {
+      border: 0;
       background: var(--green);
       color: #091108;
-      font-weight: 900;
+    }
+
+    .account-panel {
+      max-width: 520px;
+      margin: 40px auto;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      background: var(--surface);
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .account-avatar {
+      width: 82px;
+      height: 82px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--surface2);
+      font-size: 38px;
+    }
+
+    .account-name {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .account-email {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .account-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      z-index: 200;
+      z-index: 300;
       display: none;
       align-items: center;
       justify-content: center;
@@ -331,6 +351,38 @@
       color: var(--danger);
     }
 
+    .bottom-tabs {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 150;
+      height: 68px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+      background: rgba(9,13,20,.96);
+      backdrop-filter: blur(18px);
+    }
+
+    .tab-button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .tab-button span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .tab-button.active {
+      color: var(--green);
+    }
+
     footer {
       border-top: 1px solid var(--border);
       background: rgba(9,13,20,.75);
@@ -345,10 +397,6 @@
     }
 
     @media (max-width: 760px) {
-      .nav-links {
-        display: none;
-      }
-
       .footer-inner {
         min-height: 120px;
         flex-direction: column;
@@ -369,8 +417,12 @@
         width: 100%;
       }
 
-      .account-actions .button {
-        padding: 9px 10px;
+      .account-buttons {
+        flex-direction: column;
+      }
+
+      .account-buttons .button {
+        width: 100%;
       }
     }
   </style>
@@ -383,83 +435,88 @@
         <div class="logo-icon">🧱</div>
         <span>CraftMods</span>
       </a>
-
-      <div class="nav-links">
-        <a href="#mods">Mody</a>
-        <a href="#about">O stronie</a>
-        <a href="#contact">Kontakt</a>
-      </div>
-
-      <div class="account-actions" id="accountActions">
-        <button class="button" id="loginButton" type="button">
-          Zaloguj
-        </button>
-
-        <button class="button button-primary" id="registerButton" type="button">
-          Utwórz konto
-        </button>
-      </div>
     </div>
   </nav>
 
-  <header class="hero" id="about">
-    <div class="container">
-      <h1>Craft<span>Mods</span></h1>
+  <main id="modsPage" class="page active">
+    <header class="hero" id="about">
+      <div class="container">
+        <h1>Craft<span>Mods</span></h1>
 
-      <p>
-        Najlepsze dodatki do Minecrafta.
-        Pobieraj mody i ulepszaj swoją rozgrywkę.
-      </p>
+        <p>
+          Najlepsze dodatki do Minecrafta.
+          Pobieraj mody i ulepszaj swoją rozgrywkę.
+        </p>
 
-      <form class="search" id="searchForm">
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Szukaj modów..."
-        >
-
-        <button type="submit">Szukaj</button>
-      </form>
-    </div>
-  </header>
-
-  <main class="section" id="mods">
-    <div class="container">
-      <div class="section-header">
-        <h2>Popularne mody</h2>
-        <p>Najciekawsze dostępne dodatki</p>
+        <form class="search" id="searchForm">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Szukaj modów..."
+          >
+          <button type="submit">Szukaj</button>
+        </form>
       </div>
+    </header>
 
-      <div class="mods-grid">
-        <article class="mod-card">
-          <img src="./mod1.jpg" alt="multiplayer with AI">
+    <section class="section" id="mods">
+      <div class="container">
+        <div class="section-header">
+          <h2>Popularne mody</h2>
+          <p>Najciekawsze dostępne dodatki</p>
+        </div>
 
-          <div class="mod-info">
-            <h3>multiplayer with AI</h3>
+        <div class="mods-grid">
+          <article class="mod-card">
+            <img src="./mod1.jpg" alt="multiplayer with AI">
 
-            <p>
-              Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
-            </p>
+            <div class="mod-info">
+              <h3>multiplayer with AI</h3>
 
-            <a
-              class="download-button"
-              href="./mod1.mcaddon"
-              download="multiplayer with AI.mcaddon"
-            >
-              ⬇ Pobierz mod
-            </a>
-          </div>
-        </article>
+              <p>
+                Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
+              </p>
+
+              <a
+                class="download-button"
+                href="./mod1.mcaddon"
+                download="multiplayer with AI.mcaddon"
+              >
+                ⬇ Pobierz mod
+              </a>
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <footer>
+      <div class="container footer-inner">
+        <strong>CraftMods</strong>
+        <span>© 2026 CraftMods</span>
+      </div>
+    </footer>
   </main>
 
-  <footer id="contact">
-    <div class="container footer-inner">
-      <strong>CraftMods</strong>
-      <span>© 2026 CraftMods</span>
-    </div>
-  </footer>
+  <main id="accountPage" class="page">
+    <section class="section">
+      <div class="container">
+        <div class="account-panel" id="accountPanel"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-tabs">
+    <button class="tab-button active" type="button" data-page="modsPage">
+      <span>🧱</span>
+      Mods
+    </button>
+
+    <button class="tab-button" type="button" data-page="accountPage">
+      <span>👤</span>
+      Account
+    </button>
+  </nav>
 
   <div class="modal" id="registerModal">
     <div class="modal-card">
@@ -478,7 +535,6 @@
       <form id="registerForm">
         <div class="form-group">
           <label for="nickname">Nick</label>
-
           <input
             id="nickname"
             type="text"
@@ -491,7 +547,6 @@
 
         <div class="form-group">
           <label for="email">E-mail</label>
-
           <input
             id="email"
             type="email"
@@ -502,7 +557,6 @@
 
         <div class="form-group">
           <label for="password">Hasło</label>
-
           <input
             id="password"
             type="password"
@@ -514,7 +568,6 @@
 
         <div class="form-group">
           <label for="passwordConfirm">Powtórz hasło</label>
-
           <input
             id="passwordConfirm"
             type="password"
@@ -550,7 +603,6 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">E-mail</label>
-
           <input
             id="loginEmail"
             type="email"
@@ -561,7 +613,6 @@
 
         <div class="form-group">
           <label for="loginPassword">Hasło</label>
-
           <input
             id="loginPassword"
             type="password"
@@ -592,8 +643,8 @@
     const loginForm =
       document.getElementById("loginForm");
 
-    const accountActions =
-      document.getElementById("accountActions");
+    const accountPanel =
+      document.getElementById("accountPanel");
 
     function getAccounts() {
       try {
@@ -607,14 +658,6 @@
       }
     }
 
-    function openModal(modal) {
-      modal.classList.add("open");
-    }
-
-    function closeModal(modal) {
-      modal.classList.remove("open");
-    }
-
     function escapeHtml(value) {
       const element =
         document.createElement("span");
@@ -624,17 +667,13 @@
       return element.innerHTML;
     }
 
-    document
-      .getElementById("registerButton")
-      .addEventListener("click", () => {
-        openModal(registerModal);
-      });
+    function openModal(modal) {
+      modal.classList.add("open");
+    }
 
-    document
-      .getElementById("loginButton")
-      .addEventListener("click", () => {
-        openModal(loginModal);
-      });
+    function closeModal(modal) {
+      modal.classList.remove("open");
+    }
 
     document
       .getElementById("closeRegisterModal")
@@ -812,11 +851,11 @@
 
       setTimeout(() => {
         closeModal(loginModal);
-        updateAccountUI();
+        updateAccountPanel();
       }, 600);
     });
 
-    function updateAccountUI() {
+    function updateAccountPanel() {
       let currentUser = null;
 
       try {
@@ -830,24 +869,32 @@
       }
 
       if (!currentUser) {
-        accountActions.innerHTML = `
-          <button class="button" id="loginButton" type="button">
-            Zaloguj
-          </button>
+        accountPanel.innerHTML = `
+          <div class="account-avatar">👤</div>
+          <h2 class="account-name">Account</h2>
+          <p class="account-email">
+            Zaloguj się lub utwórz konto
+          </p>
 
-          <button class="button button-primary" id="registerButton" type="button">
-            Utwórz konto
-          </button>
+          <div class="account-buttons">
+            <button class="button" id="panelLoginButton" type="button">
+              Zaloguj
+            </button>
+
+            <button class="button button-primary" id="panelRegisterButton" type="button">
+              Utwórz konto
+            </button>
+          </div>
         `;
 
         document
-          .getElementById("loginButton")
+          .getElementById("panelLoginButton")
           .addEventListener("click", () => {
             openModal(loginModal);
           });
 
         document
-          .getElementById("registerButton")
+          .getElementById("panelRegisterButton")
           .addEventListener("click", () => {
             openModal(registerModal);
           });
@@ -855,14 +902,22 @@
         return;
       }
 
-      accountActions.innerHTML = `
-        <span class="button">
-          ${escapeHtml(currentUser.nickname)}
-        </span>
+      accountPanel.innerHTML = `
+        <div class="account-avatar">👤</div>
 
-        <button class="button" id="logoutButton" type="button">
-          Wyloguj
-        </button>
+        <h2 class="account-name">
+          ${escapeHtml(currentUser.nickname)}
+        </h2>
+
+        <p class="account-email">
+          ${escapeHtml(currentUser.email)}
+        </p>
+
+        <div class="account-buttons">
+          <button class="button" id="logoutButton" type="button">
+            Wyloguj
+          </button>
+        </div>
       `;
 
       document
@@ -872,41 +927,26 @@
             "craftModsCurrentUser"
           );
 
-          updateAccountUI();
+          updateAccountPanel();
         });
     }
 
-    document
-      .getElementById("searchForm")
-      .addEventListener("submit", (event) => {
-        event.preventDefault();
+    const tabButtons =
+      document.querySelectorAll(".tab-button");
 
-        const query =
-          document
-            .getElementById("searchInput")
-            .value
-            .trim()
-            .toLowerCase();
+    const pages =
+      document.querySelectorAll(".page");
 
-        const card =
-          document.querySelector(".mod-card");
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        tabButtons.forEach((item) => {
+          item.classList.remove("active");
+        });
 
-        if (
-          query &&
-          "multiplayer with ai".includes(query)
-        ) {
-          card.scrollIntoView({
-            behavior: "smooth"
-          });
+        pages.forEach((page) => {
+          page.classList.remove("active");
+        });
 
-          card.style.outline =
-            "2px solid #79c668";
-        } else if (query) {
-          alert("Nie znaleziono takiego modu.");
-        }
-      });
+        button.classList.add("active");
 
-    updateAccountUI();
-  </script>
-</body>
-</html>
+  
