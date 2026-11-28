@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d14">
   <title>CraftMods — Minecraft Mods</title>
 
   <style>
@@ -30,15 +32,8 @@
         linear-gradient(135deg, #17211b, #090d14);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
 
     .container {
       width: min(1180px, calc(100% - 32px));
@@ -91,9 +86,7 @@
       line-height: 1;
     }
 
-    .hero h1 span {
-      color: var(--green);
-    }
+    .hero h1 span { color: var(--green); }
 
     .hero p {
       max-width: 600px;
@@ -133,13 +126,8 @@
       font-weight: 900;
     }
 
-    .section {
-      padding: 32px 0 80px;
-    }
-
-    .section-header {
-      margin-bottom: 20px;
-    }
+    .section { padding: 32px 0 80px; }
+    .section-header { margin-bottom: 20px; }
 
     .section-header h2 {
       margin: 0;
@@ -172,9 +160,7 @@
       object-fit: cover;
     }
 
-    .mod-info {
-      padding: 20px;
-    }
+    .mod-info { padding: 20px; }
 
     .mod-info h3 {
       margin: 0 0 8px;
@@ -236,11 +222,13 @@
     .account-name {
       margin: 0 0 8px;
       font-size: 24px;
+      overflow-wrap: anywhere;
     }
 
     .account-email {
       margin: 0 0 20px;
       color: var(--muted);
+      overflow-wrap: anywhere;
     }
 
     .account-buttons {
@@ -296,12 +284,12 @@
       backdrop-filter: blur(10px);
     }
 
-    .modal.open {
-      display: flex;
-    }
+    .modal.open { display: flex; }
 
     .modal-card {
       width: min(430px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 28px;
@@ -332,9 +320,7 @@
       font-size: 18px;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 14px; }
 
     .form-group label {
       display: block;
@@ -353,9 +339,7 @@
       color: var(--text);
     }
 
-    .form-group input:focus {
-      border-color: var(--green);
-    }
+    .form-group input:focus { border-color: var(--green); }
 
     .submit-button {
       width: 100%;
@@ -372,6 +356,15 @@
 
     .success { color: #9be68a; }
     .error { color: var(--danger); }
+
+    .empty-message {
+      grid-column: 1 / -1;
+      padding: 28px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      color: var(--muted);
+      text-align: center;
+    }
 
     footer {
       border-top: 1px solid var(--border);
@@ -396,19 +389,13 @@
     }
 
     @media (max-width: 480px) {
-      .container {
-        width: calc(100% - 24px);
-      }
+      .container { width: calc(100% - 24px); }
 
       .search,
-      .account-buttons {
-        flex-direction: column;
-      }
+      .account-buttons { flex-direction: column; }
 
       .search button,
-      .account-buttons .button {
-        width: 100%;
-      }
+      .account-buttons .button { width: 100%; }
     }
   </style>
 </head>
@@ -427,7 +414,6 @@
     <header class="hero">
       <div class="container">
         <h1>Craft<span>Mods</span></h1>
-
         <p>
           Najlepsze dodatki do Minecrafta.
           Pobieraj mody i ulepszaj swoją rozgrywkę.
@@ -452,16 +438,14 @@
           <p>Najciekawsze dostępne dodatki</p>
         </div>
 
-        <div class="mods-grid">
+        <div class="mods-grid" id="modsGrid">
           <article class="mod-card">
             <img src="./mod1.jpg" alt="multiplayer with AI">
-
             <div class="mod-info">
               <h3>multiplayer with AI</h3>
               <p>
                 Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
               </p>
-
               <a
                 class="download-button"
                 href="./mod1.mcaddon"
@@ -513,114 +497,60 @@
     </button>
   </nav>
 
-  <div class="modal" id="registerModal" role="dialog" aria-modal="true">
+  <div class="modal" id="registerModal" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Utwórz konto</h2>
-        <button
-          class="close-button"
-          id="closeRegisterModal"
-          type="button"
-          aria-label="Zamknij"
-        >
-          ×
-        </button>
+        <h2 id="registerTitle">Utwórz konto</h2>
+        <button class="close-button" id="closeRegisterModal" type="button" aria-label="Zamknij">×</button>
       </div>
 
       <form id="registerForm">
         <div class="form-group">
           <label for="nickname">Nick</label>
-          <input
-            id="nickname"
-            type="text"
-            minlength="3"
-            maxlength="20"
-            autocomplete="username"
-            required
-          >
+          <input id="nickname" type="text" minlength="3" maxlength="20" autocomplete="username" required>
         </div>
 
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input
-            id="email"
-            type="email"
-            autocomplete="email"
-            required
-          >
+          <input id="email" type="email" autocomplete="email" required>
         </div>
 
         <div class="form-group">
           <label for="password">Hasło</label>
-          <input
-            id="password"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
+          <input id="password" type="password" minlength="8" autocomplete="new-password" required>
         </div>
 
         <div class="form-group">
           <label for="passwordConfirm">Powtórz hasło</label>
-          <input
-            id="passwordConfirm"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
+          <input id="passwordConfirm" type="password" minlength="8" autocomplete="new-password" required>
         </div>
 
-        <button class="submit-button" type="submit">
-          Zarejestruj się
-        </button>
-
-        <p class="message" id="registerMessage"></p>
+        <button class="submit-button" type="submit">Zarejestruj się</button>
+        <p class="message" id="registerMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
-  <div class="modal" id="loginModal" role="dialog" aria-modal="true">
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Zaloguj się</h2>
-        <button
-          class="close-button"
-          id="closeLoginModal"
-          type="button"
-          aria-label="Zamknij"
-        >
-          ×
-        </button>
+        <h2 id="loginTitle">Zaloguj się</h2>
+        <button class="close-button" id="closeLoginModal" type="button" aria-label="Zamknij">×</button>
       </div>
 
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">E-mail</label>
-          <input
-            id="loginEmail"
-            type="email"
-            autocomplete="email"
-            required
-          >
+          <input id="loginEmail" type="email" autocomplete="email" required>
         </div>
 
         <div class="form-group">
           <label for="loginPassword">Hasło</label>
-          <input
-            id="loginPassword"
-            type="password"
-            autocomplete="current-password"
-            required
-          >
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
         </div>
 
-        <button class="submit-button" type="submit">
-          Zaloguj
-        </button>
-
-        <p class="message" id="loginMessage"></p>
+        <button class="submit-button" type="submit">Zaloguj</button>
+        <p class="message" id="loginMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
@@ -635,7 +565,6 @@
       const loginModal = document.getElementById("loginModal");
       const registerForm = document.getElementById("registerForm");
       const loginForm = document.getElementById("loginForm");
-
       const tabButtons = document.querySelectorAll(".tab-button");
 
       function showPage(pageId) {
@@ -650,21 +579,17 @@
           button.setAttribute("aria-selected", String(active));
         });
 
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       tabButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          showPage(button.dataset.page);
-        });
+        button.addEventListener("click", () => showPage(button.dataset.page));
       });
 
-      document
-        .getElementById("homeLogo")
-        .addEventListener("click", (event) => {
-          event.preventDefault();
-          showPage("modsPage");
-        });
+      document.getElementById("homeLogo").addEventListener("click", (event) => {
+        event.preventDefault();
+        showPage("modsPage");
+      });
 
       function openModal(modal) {
         modal.classList.add("open");
@@ -676,9 +601,7 @@
 
       function getAccounts() {
         try {
-          const accounts = JSON.parse(
-            localStorage.getItem("craftModsAccounts") || "[]"
-          );
+          const accounts = JSON.parse(localStorage.getItem("craftModsAccounts") || "[]");
           return Array.isArray(accounts) ? accounts : [];
         } catch {
           return [];
@@ -687,11 +610,10 @@
 
       function setMessage(id, text, type = "") {
         const message = document.getElementById(id);
+        if (!message) return;
 
-        if (message) {
-          message.textContent = text;
-          message.className = `message ${type}`.trim();
-        }
+        message.textContent = text;
+        message.className = `message ${type}`.trim();
       }
 
       function escapeHtml(value) {
@@ -700,23 +622,17 @@
         return element.innerHTML;
       }
 
-      document
-        .getElementById("closeRegisterModal")
-        .addEventListener("click", () => {
-          closeModal(registerModal);
-        });
+      document.getElementById("closeRegisterModal").addEventListener("click", () => {
+        closeModal(registerModal);
+      });
 
-      document
-        .getElementById("closeLoginModal")
-        .addEventListener("click", () => {
-          closeModal(loginModal);
-        });
+      document.getElementById("closeLoginModal").addEventListener("click", () => {
+        closeModal(loginModal);
+      });
 
       [registerModal, loginModal].forEach((modal) => {
         modal.addEventListener("click", (event) => {
-          if (event.target === modal) {
-            closeModal(modal);
-          }
+          if (event.target === modal) closeModal(modal);
         });
       });
 
@@ -730,149 +646,83 @@
       registerForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const nickname =
-          document.getElementById("nickname").value.trim();
-
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document.getElementById("password").value;
-
-        const passwordConfirm =
-          document.getElementById("passwordConfirm").value;
+        const nickname = document.getElementById("nickname").value.trim();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const password = document.getElementById("password").value;
+        const passwordConfirm = document.getElementById("passwordConfirm").value;
 
         if (nickname.length < 3) {
-          setMessage(
-            "registerMessage",
-            "Nick musi mieć co najmniej 3 znaki.",
-            "error"
-          );
+          setMessage("registerMessage", "Nick musi mieć co najmniej 3 znaki.", "error");
           return;
         }
 
         if (password.length < 8) {
-          setMessage(
-            "registerMessage",
-            "Hasło musi mieć co najmniej 8 znaków.",
-            "error"
-          );
+          setMessage("registerMessage", "Hasło musi mieć co najmniej 8 znaków.", "error");
           return;
         }
 
         if (password !== passwordConfirm) {
-          setMessage(
-            "registerMessage",
-            "Hasła nie są jednakowe.",
-            "error"
-          );
+          setMessage("registerMessage", "Hasła nie są jednakowe.", "error");
           return;
         }
 
         const accounts = getAccounts();
 
         if (accounts.some((account) => account.email === email)) {
-          setMessage(
-            "registerMessage",
-            "Konto z tym e-mailem już istnieje.",
-            "error"
-          );
+          setMessage("registerMessage", "Konto z tym e-mailem już istnieje.", "error");
           return;
         }
 
         accounts.push({ nickname, email, password });
 
         try {
-          localStorage.setItem(
-            "craftModsAccounts",
-            JSON.stringify(accounts)
-          );
-
-          setMessage(
-            "registerMessage",
-            "Konto zostało utworzone!",
-            "success"
-          );
+          localStorage.setItem("craftModsAccounts", JSON.stringify(accounts));
+          setMessage("registerMessage", "Konto zostało utworzone!", "success");
 
           setTimeout(() => {
             closeModal(registerModal);
             registerForm.reset();
+            setMessage("registerMessage", "");
             updateAccountPanel();
           }, 700);
         } catch {
-          setMessage(
-            "registerMessage",
-            "Nie udało się zapisać konta.",
-            "error"
-          );
+          setMessage("registerMessage", "Nie udało się zapisać konta.", "error");
         }
       });
 
       loginForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const email =
-          document
-            .getElementById("loginEmail")
-            .value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document.getElementById("loginPassword").value;
-
-        const account = getAccounts().find(
-          (item) => item.email === email
-        );
+        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+        const password = document.getElementById("loginPassword").value;
+        const account = getAccounts().find((item) => item.email === email);
 
         if (!account) {
-          setMessage(
-            "loginMessage",
-            "Nie znaleziono konta o tym e-mailu.",
-            "error"
-          );
+          setMessage("loginMessage", "Nie znaleziono konta o tym e-mailu.", "error");
           return;
         }
 
         if (account.password !== password) {
-          setMessage(
-            "loginMessage",
-            "Nieprawidłowe hasło.",
-            "error"
-          );
+          setMessage("loginMessage", "Nieprawidłowe hasło.", "error");
           return;
         }
 
         try {
-          localStorage.setItem(
-            "craftModsCurrentUser",
-            JSON.stringify({
-              nickname: account.nickname,
-              email: account.email
-            })
-          );
+          localStorage.setItem("craftModsCurrentUser", JSON.stringify({
+            nickname: account.nickname,
+            email: account.email
+          }));
         } catch {
-          setMessage(
-            "loginMessage",
-            "Nie udało się zapisać sesji.",
-            "error"
-          );
+          setMessage("loginMessage", "Nie udało się zapisać sesji.", "error");
           return;
         }
 
-        setMessage(
-          "loginMessage",
-          "Zalogowano pomyślnie!",
-          "success"
-        );
+        setMessage("loginMessage", "Zalogowano pomyślnie!", "success");
 
         setTimeout(() => {
           closeModal(loginModal);
           loginForm.reset();
+          setMessage("loginMessage", "");
           updateAccountPanel();
         }, 600);
       });
@@ -881,21 +731,45 @@
         let currentUser = null;
 
         try {
-          currentUser = JSON.parse(
-            localStorage.getItem("craftModsCurrentUser") || "null"
-          );
+          currentUser = JSON.parse(localStorage.getItem("craftModsCurrentUser") || "null");
         } catch {
           currentUser = null;
         }
 
-        if (!currentUser) {
+        if (!currentUser || !currentUser.nickname || !currentUser.email) {
           accountPanel.innerHTML = `
             <div class="account-avatar">👤</div>
             <h2 class="account-name">Account</h2>
-            <p class="account-email">
-              Zaloguj się lub utwórz konto
-            </p>
+            <p class="account-email">Zaloguj się lub utwórz konto</p>
 
             <div class="account-buttons">
-              <button
-   
+              <button class="button button-primary" id="openRegister" type="button">
+                Utwórz konto
+              </button>
+              <button class="button" id="openLogin" type="button">
+                Zaloguj się
+              </button>
+            </div>
+          `;
+
+          document.getElementById("openRegister").addEventListener("click", () => {
+            setMessage("registerMessage", "");
+            openModal(registerModal);
+          });
+
+          document.getElementById("openLogin").addEventListener("click", () => {
+            setMessage("loginMessage", "");
+            openModal(loginModal);
+          });
+
+          return;
+        }
+
+        accountPanel.innerHTML = `
+          <div class="account-avatar">👤</div>
+          <h2 class="account-name">${escapeHtml(currentUser.nickname)}</h2>
+          <p class="account-email">${escapeHtml(currentUser.email)}</p>
+
+          <div class="account-buttons">
+            <button class="button" id="logoutButton" type="button">
+              W
