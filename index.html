@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d14">
   <title>CraftMods — Minecraft Mods</title>
 
   <style>
     :root {
-      --green: #79c668;
+      --surface: rgba(20, 27, 39, 0.96);
+      --surface-light: #1c2534;
+      --border: rgba(255, 255, 255, 0.08);
       --text: #f4f7fb;
       --muted: #9ba7b7;
-      --border: rgba(255,255,255,.09);
-      --surface: #141b27;
-      --surface2: #1c2534;
+      --green: #79c668;
       --danger: #ff7b7b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
 
     [hidden] { display: none !important; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -27,17 +31,15 @@
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        linear-gradient(rgba(9,13,20,.94), rgba(9,13,20,.98)),
+        linear-gradient(rgba(9, 13, 20, 0.94), rgba(9, 13, 20, 0.98)),
         linear-gradient(135deg, #17211b, #090d14);
     }
+
+    button, input { font: inherit; }
 
     a {
       color: inherit;
       text-decoration: none;
-    }
-
-    button, input {
-      font: inherit;
     }
 
     .container {
@@ -50,7 +52,7 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--border);
-      background: rgba(9,13,20,.92);
+      background: rgba(9, 13, 20, 0.88);
       backdrop-filter: blur(18px);
     }
 
@@ -78,38 +80,64 @@
     }
 
     .hero {
-      min-height: 380px;
+      min-height: 400px;
       display: grid;
       place-items: center;
       padding: 60px 0;
       text-align: center;
     }
 
-    .hero h1 {
+    .hero-content { max-width: 760px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(121, 198, 104, 0.25);
+      border-radius: 999px;
+      background: rgba(121, 198, 104, 0.09);
+      color: #addb9d;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    h1 {
       margin: 0;
       font-size: clamp(44px, 8vw, 74px);
+      line-height: 1;
+      letter-spacing: -4px;
     }
 
-    .hero h1 span {
-      color: var(--green);
-    }
+    h1 span { color: var(--green); }
 
     .hero p {
-      max-width: 600px;
-      margin: 20px auto 30px;
+      max-width: 610px;
+      margin: 22px auto 30px;
       color: #b6c0ce;
+      font-size: 18px;
       line-height: 1.7;
     }
 
     .search {
       max-width: 590px;
-      margin: auto;
+      margin: 0 auto;
       display: flex;
       gap: 10px;
       padding: 8px;
       border: 1px solid var(--border);
       border-radius: 14px;
       background: var(--surface);
+      box-shadow: var(--shadow);
     }
 
     .search input {
@@ -122,6 +150,8 @@
       color: var(--text);
     }
 
+    .search input::placeholder { color: #778397; }
+
     .search button,
     .submit-button {
       border: 0;
@@ -133,13 +163,9 @@
       font-weight: 900;
     }
 
-    .section {
-      padding: 32px 0 80px;
-    }
+    .section { padding: 32px 0 80px; }
 
-    .section-header {
-      margin-bottom: 20px;
-    }
+    .section-header { margin-bottom: 20px; }
 
     .section-header h2 {
       margin: 0;
@@ -162,7 +188,7 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       background: var(--surface);
-      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
     }
 
     .mod-card img {
@@ -172,38 +198,43 @@
       object-fit: cover;
     }
 
-    .mod-info {
-      padding: 20px;
-    }
+    .mod-info { padding: 20px; }
 
     .mod-info h3 {
       margin: 0 0 8px;
+      font-size: 22px;
     }
 
     .mod-info p {
+      margin: 0 0 16px;
       color: var(--muted);
       line-height: 1.6;
     }
 
-    .button,
-    .download-button {
+    .download-button,
+    .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border: 1px solid var(--border);
       border-radius: 9px;
-      padding: 12px 18px;
+      padding: 10px 14px;
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      font-weight: 900;
+      font-weight: 800;
     }
 
-    .button-primary,
-    .download-button {
+    .download-button,
+    .button-primary {
       border: 0;
       background: var(--green);
       color: #091108;
+    }
+
+    .download-button {
+      padding: 12px 18px;
+      font-weight: 900;
     }
 
     .account-panel {
@@ -214,7 +245,7 @@
       padding: 28px;
       background: var(--surface);
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
     }
 
     .account-avatar {
@@ -224,12 +255,13 @@
       place-items: center;
       margin: 0 auto 16px;
       border-radius: 50%;
-      background: var(--surface2);
+      background: var(--surface-light);
       font-size: 38px;
     }
 
     .account-name {
       margin: 0 0 8px;
+      font-size: 24px;
     }
 
     .account-email {
@@ -246,15 +278,16 @@
 
     .bottom-tabs {
       position: fixed;
-      left: 0;
       right: 0;
       bottom: 0;
+      left: 0;
       z-index: 150;
       height: 68px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       border-top: 1px solid var(--border);
-      background: rgba(9,13,20,.97);
+      background: rgba(9, 13, 20, 0.97);
+      backdrop-filter: blur(18px);
     }
 
     .tab-button {
@@ -263,6 +296,7 @@
       color: var(--muted);
       cursor: pointer;
       font-weight: 900;
+      touch-action: manipulation;
     }
 
     .tab-button span {
@@ -273,7 +307,7 @@
 
     .tab-button.active {
       color: var(--green);
-      background: rgba(121,198,104,.06);
+      background: rgba(121, 198, 104, 0.06);
     }
 
     .modal {
@@ -284,19 +318,19 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(3,6,10,.78);
+      background: rgba(3, 6, 10, 0.78);
+      backdrop-filter: blur(10px);
     }
 
-    .modal.open {
-      display: flex;
-    }
+    .modal.open { display: flex; }
 
     .modal-card {
       width: min(430px, 100%);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 28px;
-      background: var(--surface);
+      background: #141b27;
+      box-shadow: var(--shadow);
     }
 
     .modal-header {
@@ -308,6 +342,7 @@
 
     .modal-header h2 {
       margin: 0;
+      font-size: 24px;
     }
 
     .close-button {
@@ -321,13 +356,12 @@
       font-size: 18px;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 14px; }
 
     .form-group label {
       display: block;
       margin-bottom: 7px;
+      color: #cbd3de;
       font-size: 14px;
       font-weight: 800;
     }
@@ -342,6 +376,10 @@
       color: var(--text);
     }
 
+    .form-group input:focus {
+      border-color: var(--green);
+    }
+
     .submit-button {
       width: 100%;
       margin-top: 6px;
@@ -352,13 +390,15 @@
       min-height: 20px;
       margin: 12px 0 0;
       text-align: center;
+      font-size: 14px;
     }
 
-    .success { color: #9be68a; }
-    .error { color: var(--danger); }
+    .message.success { color: #9be68a; }
+    .message.error { color: var(--danger); }
 
     footer {
       border-top: 1px solid var(--border);
+      background: rgba(9, 13, 20, 0.75);
     }
 
     .footer-inner {
@@ -367,12 +407,20 @@
       align-items: center;
       justify-content: space-between;
       color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .footer-inner {
+        min-height: 120px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+      }
     }
 
     @media (max-width: 480px) {
-      .container {
-        width: calc(100% - 24px);
-      }
+      .container { width: calc(100% - 24px); }
 
       .search,
       .account-buttons {
@@ -384,12 +432,7 @@
         width: 100%;
       }
 
-      .footer-inner {
-        min-height: 120px;
-        flex-direction: column;
-        justify-content: center;
-        gap: 8px;
-      }
+      h1 { letter-spacing: -2px; }
     }
   </style>
 </head>
@@ -397,7 +440,7 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <a class="logo" href="#" id="homeLogo">
+      <a class="logo" href="#" id="homeLogo" aria-label="CraftMods — strona główna">
         <div class="logo-icon">🧱</div>
         <span>CraftMods</span>
       </a>
@@ -406,12 +449,17 @@
 
   <main id="modsPage" class="page">
     <header class="hero">
-      <div class="container">
+      <div class="container hero-content">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Minecraft Mods
+        </div>
+
         <h1>Craft<span>Mods</span></h1>
 
         <p>
-          Najlepsze dodatki do Minecrafta.
-          Pobieraj mody i ulepszaj swoją rozgrywkę.
+          Proste miejsce do znalezienia najlepszych modów do Minecrafta.
+          Pobieraj dodatki i ulepszaj swoją rozgrywkę.
         </p>
 
         <form class="search" id="searchForm">
@@ -419,6 +467,7 @@
             id="searchInput"
             type="search"
             placeholder="Szukaj modów..."
+            aria-label="Szukaj modów"
           >
           <button type="submit">Szukaj</button>
         </form>
@@ -429,7 +478,7 @@
       <div class="container">
         <div class="section-header">
           <h2>Popularne mody</h2>
-          <p>Najciekawsze dostępne dodatki</p>
+          <p>Najbardziej interesujące dodatki</p>
         </div>
 
         <div class="mods-grid">
@@ -438,10 +487,7 @@
 
             <div class="mod-info">
               <h3>multiplayer with AI</h3>
-
-              <p>
-                Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
-              </p>
+              <p>Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.</p>
 
               <a
                 class="download-button"
@@ -459,7 +505,7 @@
     <footer>
       <div class="container footer-inner">
         <strong>CraftMods</strong>
-        <span>© 2026 CraftMods</span>
+        <span>© 2026 CraftMods. Wszelkie prawa zastrzeżone.</span>
       </div>
     </footer>
   </main>
@@ -472,11 +518,12 @@
     </section>
   </main>
 
-  <nav class="bottom-tabs">
+  <nav class="bottom-tabs" aria-label="Główna nawigacja">
     <button
       class="tab-button active"
       type="button"
       data-page="modsPage"
+      aria-selected="true"
     >
       <span>🧱</span>
       Mods
@@ -486,24 +533,29 @@
       class="tab-button"
       type="button"
       data-page="accountPage"
+      aria-selected="false"
     >
       <span>👤</span>
       Account
     </button>
   </nav>
 
-  <div class="modal" id="registerModal">
+  <div
+    class="modal"
+    id="registerModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="registerTitle"
+  >
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Utwórz konto</h2>
-
+        <h2 id="registerTitle">Utwórz konto</h2>
         <button
           class="close-button"
           id="closeRegisterModal"
           type="button"
-        >
-          ×
-        </button>
+          aria-label="Zamknij"
+        >×</button>
       </div>
 
       <form id="registerForm">
@@ -514,6 +566,7 @@
             type="text"
             minlength="3"
             maxlength="20"
+            autocomplete="username"
             required
           >
         </div>
@@ -550,27 +603,28 @@
           >
         </div>
 
-        <button class="submit-button" type="submit">
-          Zarejestruj się
-        </button>
-
-        <p class="message" id="registerMessage"></p>
+        <button class="submit-button" type="submit">Zarejestruj się</button>
+        <p class="message" id="registerMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
-  <div class="modal" id="loginModal">
+  <div
+    class="modal"
+    id="loginModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="loginTitle"
+  >
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Zaloguj się</h2>
-
+        <h2 id="loginTitle">Zaloguj się</h2>
         <button
           class="close-button"
           id="closeLoginModal"
           type="button"
-        >
-          ×
-        </button>
+          aria-label="Zamknij"
+        >×</button>
       </div>
 
       <form id="loginForm">
@@ -594,17 +648,14 @@
           >
         </div>
 
-        <button class="submit-button" type="submit">
-          Zaloguj
-        </button>
-
-        <p class="message" id="loginMessage"></p>
+        <button class="submit-button" type="submit">Zaloguj</button>
+        <p class="message" id="loginMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", () => {
       const modsPage = document.getElementById("modsPage");
       const accountPage = document.getElementById("accountPage");
       const tabButtons = document.querySelectorAll(".tab-button");
@@ -618,45 +669,43 @@
         modsPage.hidden = pageId !== "modsPage";
         accountPage.hidden = pageId !== "accountPage";
 
-        tabButtons.forEach(function (button) {
-          button.classList.toggle(
-            "active",
-            button.dataset.page === pageId
-          );
+        tabButtons.forEach((button) => {
+          const active = button.dataset.page === pageId;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-selected", String(active));
         });
 
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      tabButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
           showPage(button.dataset.page);
         });
       });
 
-      document
-        .getElementById("homeLogo")
-        .addEventListener("click", function (event) {
-          event.preventEvent();
-          showPage("modsPage");
-        });
+      document.getElementById("homeLogo").addEventListener("click", (event) => {
+        event.preventDefault();
+        showPage("modsPage");
+      });
 
       function openModal(modal) {
         modal.classList.add("open");
+        document.body.style.overflow = "hidden";
       }
 
       function closeModal(modal) {
         modal.classList.remove("open");
+        document.body.style.overflow = "";
       }
 
       function getAccounts() {
         try {
-          const accounts = JSON.parse(
+          const value = JSON.parse(
             localStorage.getItem("craftModsAccounts") || "[]"
           );
-
-          return Array.isArray(accounts) ? accounts : [];
-        } catch (error) {
+          return Array.isArray(value) ? value : [];
+        } catch {
           return [];
         }
       }
@@ -664,34 +713,37 @@
       function setMessage(id, text, type) {
         const message = document.getElementById(id);
         message.textContent = text;
-        message.className = "message " + (type || "");
+        message.className = `message ${type || ""}`;
+      }
+
+      function escapeHtml(value) {
+        const element = document.createElement("span");
+        element.textContent = String(value);
+        return element.innerHTML;
       }
 
       document
         .getElementById("closeRegisterModal")
-        .addEventListener("click", function () {
-          closeModal(registerModal);
-        });
+        .addEventListener("click", () => closeModal(registerModal));
 
       document
         .getElementById("closeLoginModal")
-        .addEventListener("click", function () {
-          closeModal(loginModal);
+        .addEventListener("click", () => closeModal(loginModal));
+
+      [registerModal, loginModal].forEach((modal) => {
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal) closeModal(modal);
         });
-
-      registerModal.addEventListener("click", function (event) {
-        if (event.target === registerModal) {
-          closeModal(registerModal);
-        }
       });
 
-      loginModal.addEventListener("click", function (event) {
-        if (event.target === loginModal) {
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeModal(registerModal);
           closeModal(loginModal);
         }
       });
 
-      registerForm.addEventListener("submit", function (event) {
+      registerForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
         const nickname =
@@ -711,72 +763,48 @@
           document.getElementById("passwordConfirm").value;
 
         if (nickname.length < 3) {
-          setMessage(
-            "registerMessage",
-            "Nick musi mieć co najmniej 3 znaki.",
-            "error"
-          );
+          setMessage("registerMessage", "Nick musi mieć co najmniej 3 znaki.", "error");
           return;
         }
 
         if (password.length < 8) {
-          setMessage(
-            "registerMessage",
-            "Hasło musi mieć co najmniej 8 znaków.",
-            "error"
-          );
+          setMessage("registerMessage", "Hasło musi mieć co najmniej 8 znaków.", "error");
           return;
         }
 
         if (password !== passwordConfirm) {
-          setMessage(
-            "registerMessage",
-            "Hasła nie są jednakowe.",
-            "error"
-          );
+          setMessage("registerMessage", "Hasła nie są jednakowe.", "error");
           return;
         }
 
         const accounts = getAccounts();
 
-        if (
-          accounts.some(function (account) {
-            return account.email === email;
-          })
-        ) {
-          setMessage(
-            "registerMessage",
-            "Konto z tym e-mailem już istnieje.",
-            "error"
-          );
+        if (accounts.some((account) => account.email === email)) {
+          setMessage("registerMessage", "Konto z tym e-mailem już istnieje.", "error");
           return;
         }
 
-        accounts.push({
-          nickname: nickname,
-          email: email,
-          password: password
-        });
+        accounts.push({ nickname, email, password });
 
-        localStorage.setItem(
-          "craftModsAccounts",
-          JSON.stringify(accounts)
-        );
+        try {
+          localStorage.setItem(
+            "craftModsAccounts",
+            JSON.stringify(accounts)
+          );
 
-        setMessage(
-          "registerMessage",
-          "Konto zostało utworzone!",
-          "success"
-        );
+          setMessage("registerMessage", "Konto zostało utworzone!", "success");
 
-        setTimeout(function () {
-          closeModal(registerModal);
-          registerForm.reset();
-          updateAccountPanel();
-        }, 700);
+          setTimeout(() => {
+            closeModal(registerModal);
+            registerForm.reset();
+            updateAccountPanel();
+          }, 700);
+        } catch {
+          setMessage("registerMessage", "Nie udało się zapisać konta.", "error");
+        }
       });
 
-      loginForm.addEventListener("submit", function (event) {
+      loginForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
         const email =
@@ -790,25 +818,15 @@
           document.getElementById("loginPassword").value;
 
         const account =
-          getAccounts().find(function (item) {
-            return item.email === email;
-          });
+          getAccounts().find((item) => item.email === email);
 
         if (!account) {
-          setMessage(
-            "loginMessage",
-            "Nie znaleziono konta.",
-            "error"
-          );
+          setMessage("loginMessage", "Nie znaleziono konta o tym e-mailu.", "error");
           return;
         }
 
         if (account.password !== password) {
-          setMessage(
-            "loginMessage",
-            "Nieprawidłowe hasło.",
-            "error"
-          );
+          setMessage("loginMessage", "Nieprawidłowe hasło.", "error");
           return;
         }
 
@@ -820,76 +838,18 @@
           })
         );
 
-        setMessage(
-          "loginMessage",
-          "Zalogowano pomyślnie!",
-          "success"
-        );
+        setMessage("loginMessage", "Zalogowano pomyślnie!", "success");
 
-        setTimeout(function () {
+        setTimeout(() => {
           closeModal(loginModal);
           loginForm.reset();
           updateAccountPanel();
         }, 600);
       });
 
-      function escapeHtml(value) {
-        const element = document.createElement("span");
-        element.textContent = String(value);
-        return element.innerHTML;
-      }
-
       function updateAccountPanel() {
-        let user = null;
+        let currentUser = null;
 
         try {
-          user = JSON.parse(
-            localStorage.getItem("craftModsCurrentUser") || "null"
-          );
-        } catch (error) {
-          user = null;
-        }
-
-        if (!user) {
-          accountPanel.innerHTML =
-            '<div class="account-avatar">👤</div>' +
-            '<h2 class="account-name">Account</h2>' +
-            '<p class="account-email">Zaloguj się lub utwórz konto</p>' +
-            '<div class="account-buttons">' +
-            '<button class="button" id="panelLoginButton" type="button">Zaloguj</button>' +
-            '<button class="button button-primary" id="panelRegisterButton" type="button">Utwórz konto</button>' +
-            '</div>';
-
-          document
-            .getElementById("panelLoginButton")
-            .addEventListener("click", function () {
-              setMessage("loginMessage", "", "");
-              openModal(loginModal);
-            });
-
-          document
-            .getElementById("panelRegisterButton")
-            .addEventListener("click", function () {
-              setMessage("registerMessage", "", "");
-              openModal(registerModal);
-            });
-
-          return;
-        }
-
-        accountPanel.innerHTML =
-          '<div class="account-avatar">👤</div>' +
-          '<h2 class="account-name">' +
-          escapeHtml(user.nickname) +
-          '</h2>' +
-          '<p class="account-email">' +
-          escapeHtml(user.email) +
-          '</p>' +
-          '<div class="account-buttons">' +
-          '<button class="button" id="logoutButton" type="button">Wyloguj</button>' +
-          '</div>';
-
-        document
-          .getElementById("logoutButton")
-          .addEventListener("click", function () {
-     
+          currentUser = JSON.parse(
+            localStorage.getItem("craftModsCurrentUser") || "n
