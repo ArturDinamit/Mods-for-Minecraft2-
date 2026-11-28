@@ -22,6 +22,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -346,19 +350,6 @@
       padding: 13px;
     }
 
-    .text-button {
-      margin-top: 10px;
-      border: 0;
-      background: transparent;
-      color: #aebbd0;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .text-button:hover {
-      color: var(--green);
-    }
-
     .message {
       min-height: 20px;
       margin: 12px 0 0;
@@ -477,8 +468,10 @@
   <main id="mods" class="section">
     <div class="container">
       <div class="section-header">
-        <h2>Popularne mody</h2>
-        <p>Najbardziej interesujące dodatki</p>
+        <div>
+          <h2>Popularne mody</h2>
+          <p>Najbardziej interesujące dodatki</p>
+        </div>
       </div>
 
       <div class="empty-state">
@@ -499,12 +492,13 @@
     </div>
   </footer>
 
-  <!-- Rejestracja -->
-  <div class="modal" id="registerModal" role="dialog" aria-modal="true">
+  <div class="modal" id="registerModal" role="dialog" aria-modal="true"
+       aria-labelledby="registerTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Utwórz konto</h2>
-        <button class="close-button" id="closeRegisterModal" type="button">×</button>
+        <h2 id="registerTitle">Utwórz konto</h2>
+        <button class="close-button" id="closeRegisterModal" type="button"
+                aria-label="Zamknij">×</button>
       </div>
 
       <form id="registerForm">
@@ -521,22 +515,29 @@
 
         <div class="form-group">
           <label for="password">Hasło</label>
-          <input id="password" type="password" minlength="6"
+          <input id="password" type="password" minlength="8"
+                 autocomplete="new-password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordConfirm">Powtórz hasło</label>
+          <input id="passwordConfirm" type="password" minlength="8"
                  autocomplete="new-password" required>
         </div>
 
         <button class="submit-button" type="submit">Zarejestruj się</button>
-        <p class="message" id="registerMessage"></p>
+        <p class="message" id="registerMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
-  <!-- Logowanie -->
-  <div class="modal" id="loginModal" role="dialog" aria-modal="true">
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true"
+       aria-labelledby="loginTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Zaloguj się</h2>
-        <button class="close-button" id="closeLoginModal" type="button">×</button>
+        <h2 id="loginTitle">Zaloguj się</h2>
+        <button class="close-button" id="closeLoginModal" type="button"
+                aria-label="Zamknij">×</button>
       </div>
 
       <form id="loginForm">
@@ -552,219 +553,205 @@
         </div>
 
         <button class="submit-button" type="submit">Zaloguj</button>
-        <button class="text-button" id="forgotPasswordButton" type="button">
-          Zapomniałem hasła
-        </button>
-        <p class="message" id="loginMessage"></p>
+        <p class="message" id="loginMessage" aria-live="polite"></p>
       </form>
     </div>
   </div>
-
-  <!-- Reset hasła -->
-  <div class="modal" id="resetModal" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Resetowanie hasła</h2>
-        <button class="close-button" id="closeResetModal" type="button">×</button>
-      </div>
-
-      <form id="resetForm">
-        <div class="form-group">
-          <label for="resetEmail">E-mail</label>
-          <input id="resetEmail" type="email" autocomplete="email" required>
-        </div>
-
-        <button class="submit-button" type="submit">
-          Wyślij link resetujący
-        </button>
-        <p class="message" id="resetMessage"></p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 
   <script>
-    // Wstaw tutaj dane swojej aplikacji Firebase.
-    const firebaseConfig = {
-      apiKey: "TWOJE_API_KEY",
-      authDomain: "TWOJA_NAZWA_PROJEKTU.firebaseapp.com",
-      projectId: "TWOJA_NAZWA_PROJEKTU",
-      storageBucket: "TWOJA_NAZWA_PROJEKTU.firebasestorage.app",
-      messagingSenderId: "TWOJE_MESSAGING_SENDER_ID",
-      appId: "TWOJE_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
     const registerModal = document.getElementById("registerModal");
     const loginModal = document.getElementById("loginModal");
-    const resetModal = document.getElementById("resetModal");
+    const registerButton = document.getElementById("registerButton");
+    const loginButton = document.getElementById("loginButton");
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
-    const resetForm = document.getElementById("resetForm");
     const accountActions = document.getElementById("accountActions");
 
-    function openModal(modal) {
-      modal.classList.add("open");
+    function getAccounts() {
+      try {
+        const value = JSON.parse(
+          localStorage.getItem("craftModsAccounts") || "[]"
+        );
+        return Array.isArray(value) ? value : [];
+      } catch {
+        return [];
+      }
     }
 
-    function closeModal(modal) {
-      modal.classList.remove("open");
+    function escapeHtml(value) {
+      const element = document.createElement("span");
+      element.textContent = String(value);
+      return element.innerHTML;
     }
 
-    document
-      .getElementById("registerButton")
-      .addEventListener("click", () => openModal(registerModal));
+    function showRegisterMessage(text, type) {
+      const message = document.getElementById("registerMessage");
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
 
-    document
-      .getElementById("loginButton")
-      .addEventListener("click", () => openModal(loginModal));
+    function showLoginMessage(text, type) {
+      const message = document.getElementById("loginMessage");
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
+
+    function openRegisterModal() {
+      showRegisterMessage("", "");
+      registerModal.classList.add("open");
+      document.getElementById("nickname").focus();
+    }
+
+    function openLoginModal() {
+      showLoginMessage("", "");
+      loginModal.classList.add("open");
+      document.getElementById("loginEmail").focus();
+    }
+
+    function closeRegisterModal() {
+      registerModal.classList.remove("open");
+      registerForm.reset();
+    }
+
+    function closeLoginModal() {
+      loginModal.classList.remove("open");
+      loginForm.reset();
+    }
+
+    registerButton.addEventListener("click", openRegisterModal);
+    loginButton.addEventListener("click", openLoginModal);
 
     document
       .getElementById("closeRegisterModal")
-      .addEventListener("click", () => closeModal(registerModal));
+      .addEventListener("click", closeRegisterModal);
 
     document
       .getElementById("closeLoginModal")
-      .addEventListener("click", () => closeModal(loginModal));
+      .addEventListener("click", closeLoginModal);
 
-    document
-      .getElementById("closeResetModal")
-      .addEventListener("click", () => closeModal(resetModal));
+    registerModal.addEventListener("click", (event) => {
+      if (event.target === registerModal) {
+        closeRegisterModal();
+      }
+    });
 
-    [registerModal, loginModal, resetModal].forEach((modal) => {
-      modal.addEventListener("click", (event) => {
-        if (event.target === modal) {
-          closeModal(modal);
-        }
-      });
+    loginModal.addEventListener("click", (event) => {
+      if (event.target === loginModal) {
+        closeLoginModal();
+      }
     });
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        closeModal(registerModal);
-        closeModal(loginModal);
-        closeModal(resetModal);
+        closeRegisterModal();
+        closeLoginModal();
       }
     });
 
-    registerForm.addEventListener("submit", async (event) => {
+    registerForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const nickname = document
-        .getElementById("nickname")
-        .value
-        .trim();
-
-      const email = document
-        .getElementById("email")
-        .value
-        .trim();
-
-      const password = document
-        .getElementById("password")
-        .value;
-
-      const message = document.getElementById("registerMessage");
+      const nickname =
+        document.getElementById("nickname").value.trim();
+      const email =
+        document.getElementById("email").value.trim().toLowerCase();
+      const password =
+        document.getElementById("password").value;
+      const passwordConfirm =
+        document.getElementById("passwordConfirm").value;
 
       if (nickname.length < 3) {
-        message.className = "message error";
-        message.textContent = "Nick musi mieć co najmniej 3 znaki.";
+        showRegisterMessage("Nick musi mieć co najmniej 3 znaki.", "error");
         return;
       }
 
+      if (password.length < 8) {
+        showRegisterMessage("Hasło musi mieć co najmniej 8 znaków.", "error");
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        showRegisterMessage("Hasła nie są jednakowe.", "error");
+        return;
+      }
+
+      const accounts = getAccounts();
+
+      if (accounts.some((account) => account.email === email)) {
+        showRegisterMessage("Konto z takim e-mailem już istnieje.", "error");
+        return;
+      }
+
+      accounts.push({ nickname, email, password });
+
       try {
-        const credential = await auth.createUserWithEmailAndPassword(
-          email,
-          password
+        localStorage.setItem(
+          "craftModsAccounts",
+          JSON.stringify(accounts)
         );
 
-        await credential.user.updateProfile({
-          displayName: nickname
-        });
-
-        message.className = "message success";
-        message.textContent = "Konto zostało utworzone!";
+        showRegisterMessage("Konto zostało utworzone!", "success");
 
         setTimeout(() => {
-          closeModal(registerModal);
-          registerForm.reset();
+          closeRegisterModal();
         }, 800);
-      } catch (error) {
-        message.className = "message error";
-        message.textContent = getAuthError(error);
+      } catch {
+        showRegisterMessage(
+          "Nie udało się zapisać konta w tej przeglądarce.",
+          "error"
+        );
       }
     });
 
-    loginForm.addEventListener("submit", async (event) => {
+    loginForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const email = document
-        .getElementById("loginEmail")
-        .value
-        .trim();
+      const email =
+        document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password =
+        document.getElementById("loginPassword").value;
 
-      const password = document
-        .getElementById("loginPassword")
-        .value;
+      const accounts = getAccounts();
+      const account = accounts.find((item) => item.email === email);
 
-      const message = document.getElementById("loginMessage");
-
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        message.className = "message success";
-        message.textContent = "Zalogowano pomyślnie!";
-
-        setTimeout(() => {
-          closeModal(loginModal);
-          loginForm.reset();
-        }, 600);
-      } catch (error) {
-        message.className = "message error";
-        message.textContent = getAuthError(error);
+      if (!account) {
+        showLoginMessage("Nie znaleziono konta o tym e-mailu.", "error");
+        return;
       }
+
+      if (account.password !== password) {
+        showLoginMessage("Nieprawidłowe hasło.", "error");
+        return;
+      }
+
+      localStorage.setItem(
+        "craftModsCurrentUser",
+        JSON.stringify({
+          nickname: account.nickname,
+          email: account.email
+        })
+      );
+
+      showLoginMessage("Zalogowano pomyślnie!", "success");
+
+      setTimeout(() => {
+        closeLoginModal();
+        updateAccountUI();
+      }, 600);
     });
 
-    document
-      .getElementById("forgotPasswordButton")
-      .addEventListener("click", () => {
-        closeModal(loginModal);
-
-        const loginEmail =
-          document.getElementById("loginEmail").value.trim();
-
-        document.getElementById("resetEmail").value = loginEmail;
-        openModal(resetModal);
-      });
-
-    resetForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const email = document
-        .getElementById("resetEmail")
-        .value
-        .trim();
-
-      const message = document.getElementById("resetMessage");
+    function updateAccountUI() {
+      let currentUser = null;
 
       try {
-        await auth.sendPasswordResetEmail(email);
-
-        message.className = "message success";
-        message.textContent =
-          "E-mail z linkiem resetującym został wysłany.";
-      } catch (error) {
-        message.className = "message error";
-        message.textContent = getAuthError(error);
+        currentUser = JSON.parse(
+          localStorage.getItem("craftModsCurrentUser") || "null"
+        );
+      } catch {
+        currentUser = null;
       }
-    });
 
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
+      if (!currentUser) {
         accountActions.innerHTML = `
           <button class="button" type="button" id="loginButton">Zaloguj</button>
           <button class="button button-primary" type="button"
@@ -773,58 +760,42 @@
 
         document
           .getElementById("loginButton")
-          .addEventListener("click", () => openModal(loginModal));
+          .addEventListener("click", openLoginModal);
 
         document
           .getElementById("registerButton")
-          .addEventListener("click", () => openModal(registerModal));
+          .addEventListener("click", openRegisterModal);
 
         return;
       }
 
-      const nickname =
-        user.displayName ||
-        user.email ||
-        "Konto";
-
       accountActions.innerHTML = `
-        <span class="button">${escapeHtml(nickname)}</span>
+        <span class="button">${escapeHtml(currentUser.nickname)}</span>
         <button class="button" type="button" id="logoutButton">Wyloguj</button>
       `;
 
       document
         .getElementById("logoutButton")
-        .addEventListener("click", () => auth.signOut());
-    });
-
-    function escapeHtml(value) {
-      const element = document.createElement("span");
-      element.textContent = String(value);
-      return element.innerHTML;
-    }
-
-    function getAuthError(error) {
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          return "Konto z tym adresem e-mail już istnieje.";
-        case "auth/invalid-email":
-          return "Podano nieprawidłowy adres e-mail.";
-        case "auth/weak-password":
-          return "Hasło jest za słabe.";
-        case "auth/user-not-found":
-          return "Nie znaleziono konta z tym adresem e-mail.";
-        case "auth/wrong-password":
-          return "Nieprawidłowe hasło.";
-        case "auth/invalid-credential":
-          return "Nieprawidłowy e-mail lub hasło.";
-        case "auth/too-many-requests":
-          return "Zbyt wiele prób. Spróbuj ponownie później.";
-        default:
-          return "Wystąpił błąd: " + error.message;
-      }
+        .addEventListener("click", () => {
+          localStorage.removeItem("craftModsCurrentUser");
+          updateAccountUI();
+        });
     }
 
     document
       .getElementById("searchForm")
       .addEventListener("submit", (event) => {
-        event.prevent
+        event.preventDefault();
+
+        const query =
+          document.getElementById("searchInput").value.trim();
+
+        if (query) {
+          alert(`Wyszukiwanie: ${query}\nNa razie nie ma dostępnych modów.`);
+        }
+      });
+
+    updateAccountUI();
+  </script>
+</body>
+</html>
