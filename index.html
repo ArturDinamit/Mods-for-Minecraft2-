@@ -18,7 +18,9 @@
 
     * { box-sizing: border-box; }
 
-    [hidden] { display: none !important; }
+    [hidden] {
+      display: none !important;
+    }
 
     body {
       margin: 0;
@@ -631,6 +633,7 @@
       const modsPage = document.getElementById("modsPage");
       const accountPage = document.getElementById("accountPage");
       const accountPanel = document.getElementById("accountPanel");
+
       const tabButtons = document.querySelectorAll(".tab-button");
 
       const registerModal = document.getElementById("registerModal");
@@ -639,8 +642,10 @@
       const loginForm = document.getElementById("loginForm");
 
       function showPage(pageId) {
-        modsPage.hidden = pageId !== "modsPage";
-        accountPage.hidden = pageId !== "accountPage";
+        const showMods = pageId === "modsPage";
+
+        modsPage.hidden = !showMods;
+        accountPage.hidden = showMods;
 
         tabButtons.forEach((button) => {
           const active = button.dataset.page === pageId;
@@ -648,7 +653,10 @@
           button.setAttribute("aria-selected", String(active));
         });
 
-        window.scrollTo(0, 0);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
       }
 
       tabButtons.forEach((button) => {
@@ -663,6 +671,8 @@
           event.preventDefault();
           showPage("modsPage");
         });
+
+      showPage("modsPage");
 
       function openModal(modal) {
         modal.classList.add("open");
@@ -686,6 +696,7 @@
 
       function setMessage(id, text, type) {
         const message = document.getElementById(id);
+
         message.textContent = text;
         message.className = `message ${type || ""}`;
       }
@@ -809,7 +820,7 @@
       });
 
       loginForm.addEventListener("submit", (event) => {
-        event.preventEvent();
+        event.preventDefault();
 
         const email =
           document
@@ -893,8 +904,4 @@
               </button>
 
               <button
-                class="button button-primary"
-                type="button"
-                id="panelRegisterButton"
-              >
-  
+                c
