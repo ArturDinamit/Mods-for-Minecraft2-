@@ -14,7 +14,28 @@
   --border:rgba(255,255,255,.09);
   --surface:#141b27;
   --surface2:#1c2534;
+  --page-bg:linear-gradient(135deg,#17211b,#090d14);
+  --nav-bg:rgba(9,13,20,.95);
+  --bottom-bg:rgba(9,13,20,.97);
+  --modal-bg:#141b27;
+  --input-bg:#0d131d;
   --danger:#ff7b7b;
+  --shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+body.light {
+  --text:#202a35;
+  --muted:#687586;
+  --border:rgba(20,35,50,.14);
+  --surface:#ffffff;
+  --surface2:#edf2f6;
+  --page-bg:linear-gradient(135deg,#eef8eb,#f2f5fa);
+  --nav-bg:rgba(255,255,255,.95);
+  --bottom-bg:rgba(255,255,255,.97);
+  --modal-bg:#ffffff;
+  --input-bg:#f0f3f6;
+  --danger:#d83c3c;
+  --shadow:0 20px 50px rgba(30,50,70,.12);
 }
 
 * { box-sizing:border-box; }
@@ -26,11 +47,12 @@ body {
   padding-bottom:76px;
   font-family:Arial,sans-serif;
   color:var(--text);
-  background:linear-gradient(135deg,#17211b,#090d14);
+  background:var(--page-bg);
+  transition:background .25s,color .25s;
 }
 
 a { color:inherit;text-decoration:none; }
-button,input { font:inherit; }
+button,input,select { font:inherit; }
 
 .container {
   width:min(1180px,calc(100% - 32px));
@@ -42,7 +64,7 @@ button,input { font:inherit; }
   top:0;
   z-index:100;
   border-bottom:1px solid var(--border);
-  background:rgba(9,13,20,.95);
+  background:var(--nav-bg);
   backdrop-filter:blur(18px);
 }
 
@@ -88,7 +110,7 @@ button,input { font:inherit; }
 .hero p {
   max-width:600px;
   margin:20px auto 30px;
-  color:#b6c0ce;
+  color:var(--muted);
   line-height:1.7;
 }
 
@@ -148,7 +170,7 @@ button,input { font:inherit; }
   border:1px solid var(--border);
   border-radius:18px;
   background:var(--surface);
-  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  box-shadow:var(--shadow);
 }
 
 .mod-card img {
@@ -198,7 +220,7 @@ button,input { font:inherit; }
   padding:28px;
   background:var(--surface);
   text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  box-shadow:var(--shadow);
 }
 
 .account-avatar {
@@ -220,6 +242,7 @@ button,input { font:inherit; }
 .account-email {
   margin:0 0 20px;
   color:var(--muted);
+  overflow-wrap:anywhere;
 }
 
 .account-buttons {
@@ -227,6 +250,68 @@ button,input { font:inherit; }
   justify-content:center;
   flex-wrap:wrap;
   gap:10px;
+}
+
+.settings-panel {
+  max-width:520px;
+  margin:40px auto;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:26px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+
+.settings-panel h2 {
+  margin:0 0 24px;
+  text-align:center;
+}
+
+.settings-group {
+  margin-bottom:24px;
+  text-align:left;
+}
+
+.settings-group label {
+  display:block;
+  margin-bottom:10px;
+  font-weight:900;
+}
+
+.settings-select {
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--input-bg);
+  color:var(--text);
+  outline:none;
+}
+
+.theme-options {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.theme-button {
+  padding:14px 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface2);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:900;
+}
+
+.theme-button.selected {
+  border:2px solid var(--green);
+  background:rgba(121,198,104,.12);
+}
+
+.back-button {
+  width:100%;
+  margin-top:10px;
 }
 
 .bottom-tabs {
@@ -239,7 +324,7 @@ button,input { font:inherit; }
   display:grid;
   grid-template-columns:1fr 1fr;
   border-top:1px solid var(--border);
-  background:rgba(9,13,20,.97);
+  background:var(--bottom-bg);
   backdrop-filter:blur(18px);
 }
 
@@ -284,8 +369,8 @@ button,input { font:inherit; }
   border:1px solid var(--border);
   border-radius:18px;
   padding:28px;
-  background:#141b27;
-  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  background:var(--modal-bg);
+  box-shadow:var(--shadow);
 }
 
 .modal-header {
@@ -326,7 +411,7 @@ button,input { font:inherit; }
   border-radius:9px;
   outline:0;
   padding:12px 13px;
-  background:#0d131d;
+  background:var(--input-bg);
   color:var(--text);
 }
 
@@ -345,7 +430,7 @@ button,input { font:inherit; }
   font-size:14px;
 }
 
-.success { color:#9be68a; }
+.success { color:#58bd45; }
 .error { color:var(--danger); }
 
 .empty-message {
@@ -357,7 +442,7 @@ button,input { font:inherit; }
 
 footer {
   border-top:1px solid var(--border);
-  background:rgba(9,13,20,.75);
+  background:var(--nav-bg);
 }
 
 .footer-inner {
@@ -408,19 +493,16 @@ footer {
     <div class="container">
       <h1>Craft<span>Mods</span></h1>
 
-      <p>
+      <p id="heroDescription">
         Najlepsze dodatki do Minecrafta.
         Pobieraj mody i ulepszaj swoją rozgrywkę.
       </p>
 
       <form class="search" id="searchForm">
-        <input
-          id="searchInput"
-          type="search"
+        <input id="searchInput" type="search"
           placeholder="Szukaj modów..."
-          aria-label="Szukaj modów"
-        >
-        <button type="submit">Szukaj</button>
+          aria-label="Szukaj modów">
+        <button type="submit" id="searchButton">Szukaj</button>
       </form>
     </div>
   </header>
@@ -429,32 +511,29 @@ footer {
     <div class="container">
 
       <div class="section-header">
-        <h2>Popularne mody</h2>
-        <p>Najciekawsze dostępne dodatki</p>
+        <h2 id="popularTitle">Popularne mody</h2>
+        <p id="popularDescription">Najciekawsze dostępne dodatki</p>
       </div>
 
       <div class="mods-grid" id="modsGrid">
-
         <article class="mod-card">
           <img src="./mod1.jpg" alt="multiplayer with AI">
 
           <div class="mod-info">
             <h3>multiplayer with AI</h3>
 
-            <p>
+            <p id="modDescription">
               Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.
             </p>
 
-            <a
-              class="download-button"
+            <a class="download-button"
               href="./mod1.mcaddon"
               download="multiplayer with AI.mcaddon"
-            >
+              id="downloadButton">
               ⬇ Pobierz mod
             </a>
           </div>
         </article>
-
       </div>
     </div>
   </section>
@@ -476,71 +555,55 @@ footer {
   </section>
 </main>
 
-<nav class="bottom-tabs" aria-label="Główna nawigacja">
-
-  <button
-    class="tab-button active"
-    type="button"
-    data-page="modsPage"
-    aria-selected="true"
-  >
+<nav class="bottom-tabs" aria-label="Main navigation">
+  <button class="tab-button active" type="button"
+    data-page="modsPage" aria-selected="true">
     <span>🧱</span>
-    Mods
+    <span id="modsTabText">Mods</span>
   </button>
 
-  <button
-    class="tab-button"
-    type="button"
-    data-page="accountPage"
-    aria-selected="false"
-  >
+  <button class="tab-button" type="button"
+    data-page="accountPage" aria-selected="false">
     <span>👤</span>
-    Account
+    <span id="accountTabText">Account</span>
   </button>
-
 </nav>
 
 <!-- REGISTER -->
 
 <div class="modal" id="registerModal" role="dialog" aria-modal="true">
   <div class="modal-card">
-
     <div class="modal-header">
-      <h2>Utwórz konto</h2>
-
-      <button class="close-button" id="closeRegisterModal" type="button">
-        ×
-      </button>
+      <h2 id="registerTitle">Utwórz konto</h2>
+      <button class="close-button" id="closeRegisterModal" type="button">×</button>
     </div>
 
     <form id="registerForm">
-
       <div class="form-group">
-        <label for="nickname">Nick</label>
+        <label for="nickname" id="nicknameLabel">Nick</label>
         <input id="nickname" type="text" minlength="3" maxlength="20" required>
       </div>
 
       <div class="form-group">
-        <label for="email">E-mail</label>
+        <label for="email" id="emailLabel">E-mail</label>
         <input id="email" type="email" required>
       </div>
 
       <div class="form-group">
-        <label for="password">Hasło</label>
+        <label for="password" id="passwordLabel">Hasło</label>
         <input id="password" type="password" minlength="8" required>
       </div>
 
       <div class="form-group">
-        <label for="passwordConfirm">Powtórz hasło</label>
+        <label for="passwordConfirm" id="confirmPasswordLabel">Powtórz hasło</label>
         <input id="passwordConfirm" type="password" minlength="8" required>
       </div>
 
-      <button class="submit-button" type="submit">
+      <button class="submit-button" type="submit" id="registerButton">
         Zarejestruj się
       </button>
 
       <p class="message" id="registerMessage"></p>
-
     </form>
   </div>
 </div>
@@ -549,33 +612,27 @@ footer {
 
 <div class="modal" id="loginModal" role="dialog" aria-modal="true">
   <div class="modal-card">
-
     <div class="modal-header">
-      <h2>Zaloguj się</h2>
-
-      <button class="close-button" id="closeLoginModal" type="button">
-        ×
-      </button>
+      <h2 id="loginTitle">Zaloguj się</h2>
+      <button class="close-button" id="closeLoginModal" type="button">×</button>
     </div>
 
     <form id="loginForm">
-
       <div class="form-group">
-        <label for="loginEmail">E-mail</label>
+        <label for="loginEmail" id="loginEmailLabel">E-mail</label>
         <input id="loginEmail" type="email" required>
       </div>
 
       <div class="form-group">
-        <label for="loginPassword">Hasło</label>
+        <label for="loginPassword" id="loginPasswordLabel">Hasło</label>
         <input id="loginPassword" type="password" required>
       </div>
 
-      <button class="submit-button" type="submit">
+      <button class="submit-button" type="submit" id="loginButton">
         Zaloguj
       </button>
 
       <p class="message" id="loginMessage"></p>
-
     </form>
   </div>
 </div>
@@ -595,348 +652,206 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const tabs = document.querySelectorAll(".tab-button");
 
-  // TABS
+  // TRANSLATIONS
 
-  function showPage(page) {
+  const translations = {
+    pl: {
+      heroDescription:"Najlepsze dodatki do Minecrafta. Pobieraj mody i ulepszaj swoją rozgrywkę.",
+      searchPlaceholder:"Szukaj modów...",
+      searchButton:"Szukaj",
+      popularTitle:"Popularne mody",
+      popularDescription:"Najciekawsze dostępne dodatki",
+      modDescription:"Dodatek Multiplayer with AI dla Minecraft Bedrock Edition.",
+      download:"⬇ Pobierz mod",
+      mods:"Mody",
+      account:"Konto",
+      accountTitle:"Konto",
+      notLogged:"Zaloguj się lub utwórz konto",
+      createAccount:"Utwórz konto",
+      login:"Zaloguj się",
+      logout:"Wyloguj się",
+      settings:"Ustawienia",
+      settingsTitle:"Ustawienia",
+      language:"Język",
+      theme:"Motyw",
+      light:"☀ Jasny",
+      dark:"🌙 Ciemny",
+      back:"← Wróć do konta",
+      registerTitle:"Utwórz konto",
+      nickname:"Nick",
+      email:"E-mail",
+      password:"Hasło",
+      confirmPassword:"Powtórz hasło",
+      register:"Zarejestruj się",
+      loginTitle:"Zaloguj się",
+      loginButton:"Zaloguj",
+      noMods:"Nie znaleziono modów.",
+      nickShort:"Nick musi mieć minimum 3 znaki.",
+      passwordShort:"Hasło musi mieć minimum 8 znaków.",
+      passwordMismatch:"Hasła nie są jednakowe.",
+      emailExists:"Ten e-mail już istnieje.",
+      accountCreated:"Konto utworzone!",
+      saveError:"Błąd zapisywania konta.",
+      wrongLogin:"Nieprawidłowy e-mail lub hasło.",
+      loggedIn:"Zalogowano!",
+      loginError:"Błąd logowania."
+    },
 
-    if (page !== "modsPage" && page !== "accountPage") return;
+    en: {
+      heroDescription:"The best Minecraft addons. Download mods and improve your gameplay.",
+      searchPlaceholder:"Search mods...",
+      searchButton:"Search",
+      popularTitle:"Popular mods",
+      popularDescription:"The most interesting available addons",
+      modDescription:"Multiplayer with AI addon for Minecraft Bedrock Edition.",
+      download:"⬇ Download mod",
+      mods:"Mods",
+      account:"Account",
+      accountTitle:"Account",
+      notLogged:"Log in or create an account",
+      createAccount:"Create account",
+      login:"Log in",
+      logout:"Log out",
+      settings:"Settings",
+      settingsTitle:"Settings",
+      language:"Language",
+      theme:"Theme",
+      light:"☀ Light",
+      dark:"🌙 Dark",
+      back:"← Back to account",
+      registerTitle:"Create account",
+      nickname:"Nickname",
+      email:"Email",
+      password:"Password",
+      confirmPassword:"Confirm password",
+      register:"Register",
+      loginTitle:"Log in",
+      loginButton:"Log in",
+      noMods:"No mods found.",
+      nickShort:"Nickname must be at least 3 characters.",
+      passwordShort:"Password must be at least 8 characters.",
+      passwordMismatch:"Passwords do not match.",
+      emailExists:"This email already exists.",
+      accountCreated:"Account created!",
+      saveError:"Error saving account.",
+      wrongLogin:"Incorrect email or password.",
+      loggedIn:"Logged in!",
+      loginError:"Login error."
+    },
 
-    modsPage.hidden = page !== "modsPage";
-    accountPage.hidden = page !== "accountPage";
+    ru: {
+      heroDescription:"Лучшие дополнения для Minecraft. Скачивай моды и улучшай свою игру.",
+      searchPlaceholder:"Искать моды...",
+      searchButton:"Искать",
+      popularTitle:"Популярные моды",
+      popularDescription:"Самые интересные доступные дополнения",
+      modDescription:"Дополнение Multiplayer with AI для Minecraft Bedrock Edition.",
+      download:"⬇ Скачать мод",
+      mods:"Моды",
+      account:"Аккаунт",
+      accountTitle:"Аккаунт",
+      notLogged:"Войди или создай аккаунт",
+      createAccount:"Создать аккаунт",
+      login:"Войти",
+      logout:"Выйти",
+      settings:"Настройки",
+      settingsTitle:"Настройки",
+      language:"Язык",
+      theme:"Тема",
+      light:"☀ Светлая",
+      dark:"🌙 Тёмная",
+      back:"← Назад в аккаунт",
+      registerTitle:"Создать аккаунт",
+      nickname:"Ник",
+      email:"Электронная почта",
+      password:"Пароль",
+      confirmPassword:"Повтори пароль",
+      register:"Зарегистрироваться",
+      loginTitle:"Войти в аккаунт",
+      loginButton:"Войти",
+      noMods:"Моды не найдены.",
+      nickShort:"Ник должен содержать минимум 3 символа.",
+      passwordShort:"Пароль должен содержать минимум 8 символов.",
+      passwordMismatch:"Пароли не совпадают.",
+      emailExists:"Этот email уже существует.",
+      accountCreated:"Аккаунт создан!",
+      saveError:"Ошибка сохранения аккаунта.",
+      wrongLogin:"Неверная почта или пароль.",
+      loggedIn:"Вход выполнен!",
+      loginError:"Ошибка входа."
+    }
+  };
 
-    tabs.forEach(function(tab) {
-      const active = tab.dataset.page === page;
-
-      tab.classList.toggle("active", active);
-      tab.setAttribute("aria-selected", String(active));
-    });
-
-    window.scrollTo(0, 0);
+  function getLanguage() {
+    const saved = localStorage.getItem("craftModsLanguage");
+    return translations[saved] ? saved : "pl";
   }
 
-  tabs.forEach(function(tab) {
-    tab.addEventListener("click", function() {
-      showPage(tab.dataset.page);
-    });
-  });
-
-  document.getElementById("homeLogo").addEventListener("click", function(e) {
-    e.preventDefault();
-    showPage("modsPage");
-  });
-
-  // MODALS
-
-  function openModal(modal) {
-    modal.classList.add("open");
+  function getTheme() {
+    return localStorage.getItem("craftModsTheme") === "light"
+      ? "light"
+      : "dark";
   }
 
-  function closeModal(modal) {
-    modal.classList.remove("open");
+  let currentLanguage = getLanguage();
+  let currentTheme = getTheme();
+
+  function t(key) {
+    return translations[currentLanguage][key] || key;
   }
 
-  document.getElementById("closeRegisterModal").addEventListener("click", function() {
-    closeModal(registerModal);
-  });
+  // THEME
 
-  document.getElementById("closeLoginModal").addEventListener("click", function() {
-    closeModal(loginModal);
-  });
+  function applyTheme() {
+    document.body.classList.toggle("light", currentTheme === "light");
+    document.documentElement.style.colorScheme = currentTheme;
+  }
 
-  [registerModal, loginModal].forEach(function(modal) {
-    modal.addEventListener("click", function(e) {
-      if (e.target === modal) closeModal(modal);
-    });
-  });
+  function setTheme(theme) {
+    currentTheme = theme;
+    localStorage.setItem("craftModsTheme", theme);
+    applyTheme();
 
-  document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape") {
-      closeModal(registerModal);
-      closeModal(loginModal);
-    }
-  });
-
-  // STORAGE
-
-  function getAccounts() {
-    try {
-      const data = JSON.parse(
-        localStorage.getItem("craftModsAccounts") || "[]"
-      );
-
-      return Array.isArray(data) ? data : [];
-
-    } catch {
-      return [];
+    if (document.getElementById("settingsPanel")) {
+      showSettings();
     }
   }
 
-  function getCurrentUser() {
-    try {
-      return JSON.parse(
-        localStorage.getItem("craftModsCurrentUser") || "null"
-      );
-    } catch {
-      return null;
-    }
+  // LANGUAGE
+
+  function setLanguage(language) {
+    if (!translations[language]) return;
+
+    currentLanguage = language;
+    localStorage.setItem("craftModsLanguage", language);
+
+    applyTranslations();
+    updateAccountPanel();
   }
 
-  function setMessage(id, text, type) {
-    const element = document.getElementById(id);
-
-    element.textContent = text;
-    element.className = "message " + (type || "");
-  }
-
-  function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, function(char) {
-      return {
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-      }[char];
-    });
-  }
-
-  // REGISTER
-
-  registerForm.addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const nickname = document.getElementById("nickname").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const password = document.getElementById("password").value;
-    const confirm = document.getElementById("passwordConfirm").value;
-
-    if (nickname.length < 3) {
-      setMessage("registerMessage", "Nick musi mieć minimum 3 znaki.", "error");
-      return;
-    }
-
-    if (password.length < 8) {
-      setMessage("registerMessage", "Hasło musi mieć minimum 8 znaków.", "error");
-      return;
-    }
-
-    if (password !== confirm) {
-      setMessage("registerMessage", "Hasła nie są jednakowe.", "error");
-      return;
-    }
-
-    const accounts = getAccounts();
-
-    if (accounts.some(function(a) {
-      return a.email === email;
-    })) {
-      setMessage("registerMessage", "Ten e-mail już istnieje.", "error");
-      return;
-    }
-
-    const account = {
-      nickname: nickname,
-      email: email,
-      password: password
-    };
-
-    accounts.push(account);
-
-    try {
-
-      localStorage.setItem(
-        "craftModsAccounts",
-        JSON.stringify(accounts)
-      );
-
-      localStorage.setItem(
-        "craftModsCurrentUser",
-        JSON.stringify({
-          nickname: nickname,
-          email: email
-        })
-      );
-
-      setMessage("registerMessage", "Konto utworzone!", "success");
-
-      setTimeout(function() {
-        closeModal(registerModal);
-        registerForm.reset();
-        updateAccountPanel();
-      }, 500);
-
-    } catch(error) {
-
-      setMessage("registerMessage", "Błąd zapisywania konta.", "error");
-
-    }
-
-  });
-
-  // LOGIN
-
-  loginForm.addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const password = document.getElementById("loginPassword").value;
-
-    const account = getAccounts().find(function(a) {
-      return a.email === email;
-    });
-
-    if (!account || account.password !== password) {
-      setMessage("loginMessage", "Nieprawidłowy e-mail lub hasło.", "error");
-      return;
-    }
-
-    try {
-
-      localStorage.setItem(
-        "craftModsCurrentUser",
-        JSON.stringify({
-          nickname: account.nickname,
-          email: account.email
-        })
-      );
-
-      setMessage("loginMessage", "Zalogowano!", "success");
-
-      setTimeout(function() {
-        closeModal(loginModal);
-        loginForm.reset();
-        updateAccountPanel();
-      }, 500);
-
-    } catch(error) {
-
-      setMessage("loginMessage", "Błąd logowania.", "error");
-
-    }
-
-  });
-
-  // ACCOUNT PANEL
-
-  function updateAccountPanel() {
-
-    const user = getCurrentUser();
-
-    if (!user || !user.nickname || !user.email) {
-
-      accountPanel.innerHTML = `
-        <div class="account-avatar">👤</div>
-
-        <h2 class="account-name">Account</h2>
-
-        <p class="account-email">
-          Zaloguj się lub utwórz konto
-        </p>
-
-        <div class="account-buttons">
-
-          <button class="button button-primary" id="openRegister">
-            Utwórz konto
-          </button>
-
-          <button class="button" id="openLogin">
-            Zaloguj się
-          </button>
-
-        </div>
-      `;
-
-      document.getElementById("openRegister").addEventListener("click", function() {
-        openModal(registerModal);
-      });
-
-      document.getElementById("openLogin").addEventListener("click", function() {
-        openModal(loginModal);
-      });
-
-    } else {
-
-      accountPanel.innerHTML = `
-        <div class="account-avatar">👤</div>
-
-        <h2 class="account-name">
-          ${escapeHTML(user.nickname)}
-        </h2>
-
-        <p class="account-email">
-          ${escapeHTML(user.email)}
-        </p>
-
-        <div class="account-buttons">
-
-          <button class="button" id="logoutButton">
-            Wyloguj się
-          </button>
-
-        </div>
-      `;
-
-      document.getElementById("logoutButton").addEventListener("click", function() {
-
-        localStorage.removeItem("craftModsCurrentUser");
-
-        updateAccountPanel();
-
-      });
-
-    }
-
-  }
-
-  // SEARCH
-
-  const searchForm = document.getElementById("searchForm");
-  const searchInput = document.getElementById("searchInput");
-  const modsGrid = document.getElementById("modsGrid");
-
-  searchForm.addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const query = searchInput.value.trim().toLowerCase();
-
-    const cards = modsGrid.querySelectorAll(".mod-card");
-    let found = 0;
-
-    cards.forEach(function(card) {
-
-      const text = card.textContent.toLowerCase();
-      const match = text.includes(query);
-
-      card.hidden = !match;
-
-      if (match) found++;
-
-    });
-
-    let empty = document.getElementById("emptySearch");
-
-    if (!empty) {
-      empty = document.createElement("div");
-      empty.id = "emptySearch";
-      empty.className = "empty-message";
-      modsGrid.appendChild(empty);
-    }
-
-    empty.hidden = found !== 0;
-    empty.textContent = "Nie znaleziono modów.";
-
-  });
-
-  // INITIALIZATION
-
-  updateAccountPanel();
-  showPage("modsPage");
-
-});
-</script>
-
-</body>
-</html>
+  function applyTranslations() {
+    document.documentElement.lang = currentLanguage;
+
+    document.getElementById("heroDescription").textContent = t("heroDescription");
+    document.getElementById("searchInput").placeholder = t("searchPlaceholder");
+    document.getElementById("searchInput").setAttribute("aria-label", t("searchPlaceholder"));
+    document.getElementById("searchButton").textContent = t("searchButton");
+    document.getElementById("popularTitle").textContent = t("popularTitle");
+    document.getElementById("popularDescription").textContent = t("popularDescription");
+    document.getElementById("modDescription").textContent = t("modDescription");
+    document.getElementById("downloadButton").textContent = t("download");
+
+    document.getElementById("modsTabText").textContent = t("mods");
+    document.getElementById("accountTabText").textContent = t("account");
+
+    document.getElementById("registerTitle").textContent = t("registerTitle");
+    document.getElementById("nicknameLabel").textContent = t("nickname");
+    document.getElementById("emailLabel").textContent = t("email");
+    document.getElementById("passwordLabel").textContent = t("password");
+    document.getElementById("confirmPasswordLabel").textContent = t("confirmPassword");
+    document.getElementById("registerButton").textContent = t("register");
+
+    document.getElementById("loginTitle").textContent = t("loginTitle");
+    document.getElementById("loginEmailLabel").textContent = t("email");
+    document.getElementById("loginPasswordLabel").textContent = t("password");
+    document.getElementById("loginButton").textContent = t("loginButto
